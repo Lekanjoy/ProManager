@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../../supabase";
 import { generateCommentId } from "../../hooks/generateId";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ const TaskCardDetails = () => {
   const dispatch = useDispatch();
   const selectedTask = useSelector((store) => store.tasks.selectedTask);
   const { title, text, severity, comments, files } = selectedTask;
+
 
   async function addComment(e) {
     e.preventDefault();

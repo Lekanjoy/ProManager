@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction, nanoid } from "@reduxjs/toolkit";
 import { supabase } from "../../supabase";
 
 export const fetchInitialData = createAsyncThunk(

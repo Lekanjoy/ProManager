@@ -21,7 +21,7 @@ const AddTaskModal = () => {
       comments: [],
       files: fileRef.current.value === "" ? [] : [fileRef.current.value],
     };
-      dispatch(setActionTriggered(true));
+    dispatch(setActionTriggered(true));
 
     try {
       const { data, error } = await supabase
@@ -32,11 +32,10 @@ const AddTaskModal = () => {
         throw error;
       }
       if (!error) {
-      dispatch(setActionTriggered(false));
+        dispatch(setActionTriggered(false));
         dispatch(toggleModal());
         console.log("Task with comments and files inserted successfully:");
       }
-
     } catch (error) {
       console.error("Error inserting task with comments and files:", error);
     }

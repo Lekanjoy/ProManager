@@ -5,8 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleModal } from "../../features/showModalSlice";
 import { useEffect, useState } from "react";
 import { fetchInitialData } from "../../features/addNewTaskSlice";
-import { supabase } from "../../../supabase";
-import { setActionTriggered } from "../../features/isActionTriggeredSlice";
 import { taskDataObj } from "../../types";
 
 const ToDo = () => {
