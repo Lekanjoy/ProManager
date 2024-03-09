@@ -1,26 +1,34 @@
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
 import { toggleModal } from "../../features/showModalSlice";
-import { addNewTask } from "../../features/addNewTaskSlice";
 import { supabase } from "../../../supabase";
 import { setActionTriggered } from "../../features/isActionTriggeredSlice";
+import { useAppDispatch } from "../../store/store";
+import { taskDataObj } from "../../types";
 
 const AddTaskModal = () => {
-  const dispatch = useDispatch();
-  const titleRef = useRef();
-  const textRef = useRef();
-  const severityRef = useRef();
-  const fileRef = useRef();
+  const dispatch = useAppDispatch();
+  const titleRef = useRef<HTMLInputElement | null>(null);
+  const textRef = useRef<HTMLInputElement | null>(null);
+  const severityRef = useRef<HTMLSelectElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
-  async function handleNewTask(e) {
+  async function handleNewTask(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const newTaskData = {
-      title: titleRef.current.value,
-      text: textRef.current.value,
-      severity: severityRef.current.value,
+
+    // Validate user input
+    if (!titleRef?.current?.value.trim() || !textRef?.current?.value.trim()) {
+      alert("Please provide all task details");
+      return;
+    }
+
+    const newTaskData: Omit<taskDataObj, "task_id"> = {
+      title: titleRef?.current?.value ,
+      text: textRef?.current?.value,
+      severity: severityRef?.current?.value as string,
       comments: [],
-      files: fileRef.current.value === "" ? [] : [fileRef.current.value],
+      files: fileRef?.current?.value === "" ? [] : [fileRef?.current?.value] as string[],
     };
+    
     dispatch(setActionTriggered(true));
 
     try {
@@ -34,7 +42,7 @@ const AddTaskModal = () => {
       if (!error) {
         dispatch(setActionTriggered(false));
         dispatch(toggleModal());
-        console.log("Task with comments and files inserted successfully:");
+        alert("Task with comments and files inserted successfully");
       }
     } catch (error) {
       console.error("Error inserting task with comments and files:", error);
@@ -62,12 +70,15 @@ const AddTaskModal = () => {
           placeholder="Enter Text"
           className="border p-2 rounded"
         />
-        <input
-          ref={severityRef}
-          type="text"
-          placeholder="E.g Low, High..."
-          className="border p-2 rounded"
-        />
+        <select ref={severityRef} className="border p-2 rounded">
+          <option value="" disabled>
+            Select priority
+          </option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
         <input ref={fileRef} type="file" className="bg-white text-primColor" />
         <button
           type="submit"

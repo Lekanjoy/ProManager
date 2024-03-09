@@ -5,12 +5,17 @@ import member from "../../assets/member.svg";
 import member1 from "../../assets/member1.svg";
 import member2 from "../../assets/member2.svg";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
-import { useDispatch } from "react-redux";
 import { selectTask } from "../../features/addNewTaskSlice";
+import { useAppDispatch } from "../../store/store";
+import { taskDataObj } from "../../types";
 
-const TaskCard = ({ task }) => {
+interface ITaskCardProps {
+task: taskDataObj
+}
+
+const TaskCard = ({ task }:ITaskCardProps) => {
   const { title, text, severity, comments, files } = task;
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
 const viewTaskDetails = () => {
   dispatch(toggleModal());
@@ -24,7 +29,7 @@ const viewTaskDetails = () => {
     >
       <div className="flex items-center justify-between mb-1">
         <p
-          className={`py-1 px-[6px] rounded bg-[rgba(223,_168,_116,_0.20)] text-[#D58D49] text-xs font-medium`}
+          className={`py-1 px-[6px] rounded text-[#fff] text-xs font-medium ${severity === 'High' ? 'bg-red-500' : severity === 'Moderate' ? 'bg-yellow-300' : 'bg-gray-500'}`}
         >
           {severity}
         </p>

@@ -1,24 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { supabase } from "../../../supabase";
 import { generateCommentId } from "../../hooks/generateId";
-import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
 import { setActionTriggered } from "../../features/isActionTriggeredSlice";
-import comment from "../../assets/comments.svg";
+import { useAppDispatch, useTypedSelector } from "../../store/store";
+import { taskDataObj } from "../../types";
 import file from "../../assets/folder-2.svg";
+import comment from "../../assets/comments.svg";
 import member from "../../assets/member.svg";
 import member1 from "../../assets/member1.svg";
 import member2 from "../../assets/member2.svg";
 
+
+
 const TaskCardDetails = () => {
+  const dispatch = useAppDispatch();
+
   const [commentText, setCommentText] = useState("");
-  const dispatch = useDispatch();
-  const selectedTask = useSelector((store) => store.tasks.selectedTask);
-  const { title, text, severity, comments, files } = selectedTask;
+  const selectedTask: taskDataObj = useTypedSelector(
+    (store) => store.tasks.selectedTask
+  );
+  const [taskDetails, setTaskDetails] = useState(selectedTask);
+  const [loading, setLoading] = useState(false);
 
-
-  async function addComment(e) {
+  async function addComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
 
     const newComments = [
       {
@@ -44,35 +51,47 @@ const TaskCardDetails = () => {
       ];
 
       // Update the task's comments with the combined array
-      const { data, error: updateError } = await supabase
+      const { data: updatedTask, error: updateError } = await supabase
         .from("tasks")
         .update({ comments: combinedComments })
-        .eq("task_id", selectedTask.task_id);
+        .eq("task_id", selectedTask.task_id)
+        .select();
 
       if (!updateError) {
-        console.log("Comments added successfully");
+        setTaskDetails(updatedTask[0]);
+        setCommentText("");
         dispatch(setActionTriggered(false));
+        setLoading(false);
       } else {
         console.error("Error updating task with comments:", updateError);
+        setLoading(false);
       }
     } else {
       console.error("Error retrieving task:", taskError);
+      setLoading(false);
     }
   }
 
   return (
     <section className="z-50 bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 flex justify-center items-center">
-      <div className="flex flex-col gap-y-3 bg-white shadow-md rounded-lg p-6 w-[500px] ">
+      <div className="relative flex flex-col gap-y-3 bg-white shadow-md rounded-lg px-8 py-6 w-[500px] max-h-[420px] overflow-auto">
         <p
-          className={`py-1 px-[6px] w-fit rounded bg-[rgba(223,_168,_116,_0.20)] text-[#D58D49] text-xs font-medium`}
+          className={`py-1 px-[6px] w-fit rounded text-white text-xs font-medium ${
+            taskDetails.severity === "High"
+              ? "bg-red-500"
+              : taskDetails.severity === "Moderate"
+              ? "bg-yellow-300"
+              : "bg-gray-500"
+          }
+          `}
         >
-          {severity}
+          {taskDetails.severity}
         </p>
         <div className=" my-2">
           <h1 className="text-secColor font-semibold mb-[6px] text-3xl ">
-            {title}
+            {taskDetails.title}
           </h1>
-          <p className="text-xs">{text}</p>
+          <p className="text-xs">{taskDetails.text}</p>
         </div>
         <div className="flex items-center gap-x-6">
           <div className="flex">
@@ -82,15 +101,15 @@ const TaskCardDetails = () => {
           </div>
           <div className="flex gap-x-1 items-center text-xs">
             <img src={comment} alt="Comment Icon" />
-            <p>{comments.length} comments</p>
+            <p>{taskDetails.comments.length} comments</p>
           </div>
           <div className="flex gap-x-1 items-center text-xs">
             <img src={file} alt="files Icon" />
-            <p>{files.length} files</p>
+            <p>{taskDetails.files.length} files</p>
           </div>
         </div>
 
-        {comments.map((comment) => {
+        {taskDetails.comments?.map((comment) => {
           return (
             <div
               key={comment.id}
@@ -105,17 +124,25 @@ const TaskCardDetails = () => {
           );
         })}
 
-        <form onSubmit={addComment} className="w-full mt-2 grid gap-y-2">
+        <form
+          onSubmit={addComment}
+          className="relative w-full mt-2 grid gap-y-2"
+        >
           <textarea
             rows={1}
             // cols={5}
             placeholder="Drop a comment . . . ."
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            className="border border-primColor rounded-tl-none resize-none text-sm text-secColor placeholder:text-secColor w-full rounded-md py-3 px-2"
+            className=" border border-primColor rounded-tl-none resize-none text-sm text-secColor placeholder:text-secColor w-full rounded-md py-3 px-2"
           ></textarea>
           {commentText.length > 0 && (
-            <button className="bg-secColor text-white px-3 py-1 rounded-lg  justify-self-end  w-fit :focus">
+            <button
+              disabled={loading}
+              className={` text-white px-3 py-1 rounded-lg  justify-self-end  w-fit ${
+                loading ? "bg-gray-400 cursor-not-allowed" : "bg-secColor"
+              }`}
+            >
               Send
             </button>
           )}

@@ -1,16 +1,16 @@
 import todoMark from "../../assets/todo-mark.svg";
 import addTask from "../../assets/add-square.svg";
 import TaskCard from "./TaskCard";
-import { useSelector, useDispatch } from "react-redux";
 import { toggleModal } from "../../features/showModalSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { fetchInitialData } from "../../features/addNewTaskSlice";
 import { taskDataObj } from "../../types";
+import { useAppDispatch, useTypedSelector } from "../../store/store";
 
 const ToDo = () => {
-  const dispatch = useDispatch();
-  const tasksData: taskDataObj[] = useSelector((store) => store.tasks.tasks);
-  const isTriggered = useSelector((state) => state.isTriggered);
+  const dispatch = useAppDispatch();
+  const tasksData: taskDataObj[] = useTypedSelector((store) => store.tasks.tasks);
+  const isTriggered = useTypedSelector((store) => store.isTriggered);
   const taskTotal = tasksData.length;
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const ToDo = () => {
     <div className=" min-h-[500px] bg-[#F5F5F5] rounded-t-2xl border px-5 pt-5 pb-10">
       <div className="flex justify-between pb-6 border-b-[3px] border-[#5030E5] mb-7">
         <div className="flex items-center gap-x-1">
-          <img src={todoMark} alt="" />
+          <img src={todoMark} alt="Todo Line" />
           <p className="text-secColor font-medium text-sm">To Do</p>
           <p className="bg-[#E0E0E0] w-5 h-5 rounded-full text-xs text-[#625F6D] font-medium flex items-center justify-center">
             {taskTotal}
