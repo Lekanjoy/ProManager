@@ -4,14 +4,15 @@ import TaskCard from "./TaskCard";
 import { toggleModal } from "../../features/showModalSlice";
 import { useEffect } from "react";
 import { fetchInitialData } from "../../features/addNewTaskSlice";
-import { taskDataObj } from "../../types";
+import { taskDataObj, teamData } from "../../types";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 
 const ToDo = () => {
   const dispatch = useAppDispatch();
-  const tasksData: taskDataObj[] = useTypedSelector((store) => store.tasks.tasks);
+  const tasksData: teamData[] = useTypedSelector((store) => store.tasks.tasks);
   const isTriggered = useTypedSelector((store) => store.isTriggered);
-  const taskTotal = tasksData.length;
+  const taskTotal = tasksData[0]?.tasks.length;
+  
 
   useEffect(() => {
     dispatch(fetchInitialData());
@@ -35,7 +36,7 @@ const ToDo = () => {
         />
       </div>
       <div className="flex flex-col gap-y-5 ">
-        {tasksData.map((task) => {
+        {tasksData[0]?.tasks.map((task) => {
           return <TaskCard key={task.task_id} task={task} />;
         })}
       </div>

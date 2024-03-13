@@ -14,7 +14,7 @@ task: taskDataObj
 }
 
 const TaskCard = ({ task }:ITaskCardProps) => {
-  const { title, text, severity, comments, files } = task;
+  const { title,  description,  priority, comments, files } = task;
   const dispatch = useAppDispatch()
 
 const viewTaskDetails = () => {
@@ -29,15 +29,15 @@ const viewTaskDetails = () => {
     >
       <div className="flex items-center justify-between mb-1">
         <p
-          className={`py-1 px-[6px] rounded text-[#fff] text-xs font-medium ${severity === 'High' ? 'bg-red-500' : severity === 'Moderate' ? 'bg-yellow-300' : 'bg-gray-500'}`}
+          className={`py-1 px-[6px] rounded text-[#fff] text-xs font-medium ${priority === 'High' ? 'bg-red-500' : priority === 'Medium' ? 'bg-yellow-300' : 'bg-gray-500'}`}
         >
-          {severity}
+          {priority}
         </p>
         <img src={more} alt="More options Icon" />
       </div>
       <div className=" mb-8">
         <p className="text-secColor font-semibold mb-[6px]">{title}</p>
-        <p className="text-xs">{text}</p>
+        <p className="text-xs">{description}</p>
       </div>
       <div className="flex items-center justify-between">
         <div className="flex">
@@ -51,7 +51,7 @@ const viewTaskDetails = () => {
         </div>
         <div className="flex gap-x-1 items-center text-xs">
           <img src={file} alt="files Icon" />
-          <p>{files.length} files</p>
+          <p>{files.length} file{files.length  > 1 && 's'}</p>
         </div>
       </div>
     </div>

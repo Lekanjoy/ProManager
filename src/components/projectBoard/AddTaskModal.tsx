@@ -1,12 +1,16 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toggleModal } from "../../features/showModalSlice";
-import { supabase } from "../../../supabase";
+import { supabase, useAuth } from "../../../supabase";
 import { setActionTriggered } from "../../features/isActionTriggeredSlice";
 import { useAppDispatch } from "../../store/store";
-import { taskDataObj } from "../../types";
+import { generateCommentId } from "../../hooks/generateId";
+import { toast } from "react-toastify";
 
 const AddTaskModal = () => {
+  const { user } = useAuth();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+
   const titleRef = useRef<HTMLInputElement | null>(null);
   const textRef = useRef<HTMLInputElement | null>(null);
   const severityRef = useRef<HTMLSelectElement | null>(null);
@@ -17,35 +21,63 @@ const AddTaskModal = () => {
 
     // Validate user input
     if (!titleRef?.current?.value.trim() || !textRef?.current?.value.trim()) {
-      alert("Please provide all task details");
+      toast.warn("Please provide all task details", {
+        pauseOnHover: false,
+      });
       return;
     }
 
-    const newTaskData: Omit<taskDataObj, "task_id"> = {
-      title: titleRef?.current?.value ,
-      text: textRef?.current?.value,
-      severity: severityRef?.current?.value as string,
-      comments: [],
-      files: fileRef?.current?.value === "" ? [] : [fileRef?.current?.value] as string[],
-    };
-    
-    dispatch(setActionTriggered(true));
+    const newTaskData = [
+      {
+        task_id: generateCommentId(),
+        title: titleRef?.current?.value,
+        description: textRef?.current?.value,
+        priority: severityRef?.current?.value as string,
+        comments: [],
+        files:
+          fileRef?.current?.value === ""
+            ? []
+            : ([fileRef?.current?.value] as string[]),
+      },
+    ];
 
+    dispatch(setActionTriggered(true));
+    setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("tasks")
-        .upsert([newTaskData]);
+      const { data: existingTask, error } = await supabase
+        .from("teams")
+        .select("tasks")
+        .eq("admin_id", user?.id)
+        .single();
 
       if (error) {
+        setLoading(false);
         throw error;
       }
       if (!error) {
+        // Combine existing and new taks into a single array
+        const combinedTasks = [...(existingTask.tasks || []), ...newTaskData];
+
+        // Update the team's task with the combined array
+        const { data: updatedTask, error: updateError } = await supabase
+          .from("teams")
+          .update({ tasks: combinedTasks })
+          .eq("admin_id", user?.id)
+          .select();
+
         dispatch(setActionTriggered(false));
         dispatch(toggleModal());
-        alert("Task with comments and files inserted successfully");
+        // Toast Notification
+        toast.success("New task created successfully", {
+          pauseOnHover: false,
+        });
+        setLoading(false);
       }
     } catch (error) {
-      console.error("Error inserting task with comments and files:", error);
+      setLoading(false);
+      toast.error("Error creating task", {
+        pauseOnHover: false,
+      });
     }
   }
 
@@ -70,8 +102,8 @@ const AddTaskModal = () => {
           placeholder="Enter Text"
           className="border p-2 rounded"
         />
-        <select ref={severityRef} className="border p-2 rounded">
-          <option value="" disabled>
+        <select ref={severityRef} required className="border p-2 rounded">
+          <option value="" disabled selected>
             Select priority
           </option>
           <option value="High">High</option>
@@ -81,8 +113,13 @@ const AddTaskModal = () => {
 
         <input ref={fileRef} type="file" className="bg-white text-primColor" />
         <button
+          disabled={loading}
           type="submit"
-          className="bg-blue-500 text-white p-2 font-medium"
+          className={`p-2 font-medium ${
+            loading
+              ? "bg-white shadow border text-black cursor-not-allowed"
+              : "bg-blue-500 text-white  cursor-pointer"
+          }`}
         >
           Add Task
         </button>

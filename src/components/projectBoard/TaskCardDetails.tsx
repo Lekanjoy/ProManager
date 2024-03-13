@@ -1,21 +1,20 @@
-import { useState} from "react";
-import { supabase } from "../../../supabase";
+import { useState } from "react";
+import { supabase, useAuth } from "../../../supabase";
 import { generateCommentId } from "../../hooks/generateId";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
 import { setActionTriggered } from "../../features/isActionTriggeredSlice";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 import { taskDataObj } from "../../types";
+import { toast } from "react-toastify";
 import file from "../../assets/folder-2.svg";
 import comment from "../../assets/comments.svg";
 import member from "../../assets/member.svg";
 import member1 from "../../assets/member1.svg";
 import member2 from "../../assets/member2.svg";
 
-
-
 const TaskCardDetails = () => {
+  const { user } = useAuth();
   const dispatch = useAppDispatch();
-
   const [commentText, setCommentText] = useState("");
   const selectedTask: taskDataObj = useTypedSelector(
     (store) => store.tasks.selectedTask
@@ -27,48 +26,56 @@ const TaskCardDetails = () => {
     e.preventDefault();
     setLoading(true);
 
-    const newComments = [
-      {
-        id: generateCommentId(),
-        text: commentText,
-        author: "new.author",
-      },
-    ];
+    const newCommentData = {
+      id: generateCommentId(),
+      text: commentText,
+      author: user?.id as string,
+    };
+
     dispatch(setActionTriggered(true));
 
     // Retrieve the existing comments first
-    const { data: existingTask, error: taskError } = await supabase
-      .from("tasks")
-      .select("comments")
-      .eq("task_id", selectedTask.task_id)
+    const { data: existingTasks, error: taskError } = await supabase
+      .from("teams")
+      .select("tasks")
+      .eq("admin_id", user?.id)
       .single();
 
-    if (!taskError) {
-      // Combine existing and new comments into a single array
-      const combinedComments = [
-        ...(existingTask.comments || []),
-        ...newComments,
-      ];
+    if (taskError) {
+      toast.error("Please try again ", {
+        pauseOnHover: false,
+      });
+      return;
+    }
 
-      // Update the task's comments with the combined array
-      const { data: updatedTask, error: updateError } = await supabase
-        .from("tasks")
-        .update({ comments: combinedComments })
-        .eq("task_id", selectedTask.task_id)
-        .select();
+    const existingDataFromDatabase:taskDataObj[] = existingTasks?.tasks;
+    const targetObject = existingDataFromDatabase.find(
+      (item) => item.task_id === selectedTask.task_id
+    );
 
-      if (!updateError) {
-        setTaskDetails(updatedTask[0]);
-        setCommentText("");
-        dispatch(setActionTriggered(false));
-        setLoading(false);
-      } else {
-        console.error("Error updating task with comments:", updateError);
-        setLoading(false);
-      }
-    } else {
-      console.error("Error retrieving task:", taskError);
+    // Update the comments property
+    targetObject?.comments.push(newCommentData);
+
+    const { data: updatedTask, error: updateError } = await supabase
+      .from("teams")
+      .update({ tasks: existingDataFromDatabase })
+      .eq("admin_id", user?.id)
+      .select();
+
+    if (!updateError && targetObject) {
+      setTaskDetails(targetObject);
+      setCommentText("");
+      dispatch(setActionTriggered(false));
       setLoading(false);
+      toast.success("Added new comment ", {
+        pauseOnHover: false,
+      });
+    } else {
+      console.error("Error updating task with comments:", updateError);
+      setLoading(false);
+      toast.error("Please try again ", {
+        pauseOnHover: false,
+      });
     }
   }
 
@@ -77,21 +84,21 @@ const TaskCardDetails = () => {
       <div className="relative flex flex-col gap-y-3 bg-white shadow-md rounded-lg px-8 py-6 w-[500px] max-h-[420px] overflow-auto">
         <p
           className={`py-1 px-[6px] w-fit rounded text-white text-xs font-medium ${
-            taskDetails.severity === "High"
+            taskDetails.priority === "High"
               ? "bg-red-500"
-              : taskDetails.severity === "Moderate"
+              : taskDetails.priority === "Medium"
               ? "bg-yellow-300"
               : "bg-gray-500"
           }
           `}
         >
-          {taskDetails.severity}
+          {taskDetails.priority}
         </p>
         <div className=" my-2">
           <h1 className="text-secColor font-semibold mb-[6px] text-3xl ">
             {taskDetails.title}
           </h1>
-          <p className="text-xs">{taskDetails.text}</p>
+          <p className="text-xs">{taskDetails.description}</p>
         </div>
         <div className="flex items-center gap-x-6">
           <div className="flex">
@@ -105,7 +112,7 @@ const TaskCardDetails = () => {
           </div>
           <div className="flex gap-x-1 items-center text-xs">
             <img src={file} alt="files Icon" />
-            <p>{taskDetails.files.length} files</p>
+            <p>{taskDetails.files.length} file{taskDetails.files.length > 1 && 's'}</p>
           </div>
         </div>
 

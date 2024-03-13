@@ -1,29 +1,25 @@
-import Header from "./components/Header";
-import ProjectHeaders from "./components/ProjectHeaders";
-import SideBar from "./components/SideBar";
-import ProjectContainer from "./components/projectBoard/ProjectContainer";
-import AddTaskModal from "./components/projectBoard/AddTaskModal";
-import TaskCardDetails from "./components/projectBoard/TaskCardDetails";
-import { useTypedSelector } from "./store/store";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import PrivateRoute from "./PrivateRoute";
+import Home from "./pages/Home";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
-  const showModal = useTypedSelector((store) => store.modal);
-  const showTask = useTypedSelector((store) => store.taskDetailsModal);
-
   return (
-    <main className="relative min-h-screen bg-white w-full">
-      <Header />
-      <div className=" relative flex w-full ">
-        <SideBar />
-        <section className=" flex flex-col px-12 w-full mb-20">
-          <ProjectHeaders />
-          <ProjectContainer />
-        </section>
-      </div>
-      {/* Modal */}
-      {showModal && <AddTaskModal />}
-      {showTask && <TaskCardDetails />}
-    </main>
+    <>
+    <Routes>
+      <Route element={<PrivateRoute />}>
+        <Route index path="/" element={<Home />} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="*" element={<ErrorPage />} />
+    </Routes>
+    <ToastContainer />
+    </>
   );
 }
 
