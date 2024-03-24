@@ -53,7 +53,7 @@ export default function Signup({
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <Link
         href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+        className="z-10 absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@ export default function Signup({
         </SubmitButton>
         <div className="flex gap-x-2 text-[15px] self-center">
           <p>Already have an account?</p>
-          <Link href="/login" className="text-secColor font-medium underline">
+          <Link href="/login" className=" font-medium underline">
             Login
           </Link>
         </div>

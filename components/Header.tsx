@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { collapseAside } from "../features/asideCollapseSlice";
 import { useDispatch, useSelector } from "react-redux";
-// import logo from "@/public/assets/colorFilter.svg";
+import logo from '@/public/assets/colorfilter.svg';
 import collapse from "@/public/assets/collapse.svg";
 import search from "@/public/assets/search-normal.svg";
 import questions from "@/public/assets/message-question.svg";
@@ -21,7 +21,7 @@ const Header = () => {
     <header className="w-full flex px-6 py-[22px] border-b border-[#DBDBDB] items-center justify-between gap-x-10">
       <div className="flex justify-between gap-x-11 items-center">
         <div className="flex gap-x-2 items-center">
-          <Image src={collapse} alt="Logo" />
+          <Image src={logo} alt="Logo" />
           <p className="text-xxl text-[#0D062D] font-semibold lg:text-2xl">
             ProManager
           </p>

@@ -26,7 +26,7 @@ const ToDo = () => {
           <Image src={todoMark} alt="Todo Line" />
           <p className="text-secColor font-medium text-sm">To Do</p>
           <p className="bg-[#E0E0E0] w-5 h-5 rounded-full text-xs text-[#625F6D] font-medium flex items-center justify-center">
-            {taskTotal}
+            {taskTotal || 0} 
           </p>
         </div>
         <Image
