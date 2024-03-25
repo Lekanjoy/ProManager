@@ -84,7 +84,7 @@ export default function Signup({
           required
         />
         <label className="text-md" htmlFor="desc">
-          Email
+          Description
         </label>
         <input
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
@@ -115,7 +115,7 @@ export default function Signup({
         />
         <SubmitButton
           formAction={signUp}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
+          className="bg-green-700 rounded-md px-4 py-2 text-white mb-2"
           pendingText="Signing Up..."
         >
           Sign Up
