@@ -29,7 +29,7 @@ export default function Signup({
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return redirect("/signup?message=Could not create user");
     }
 
     // Create new team after succesful registration
@@ -51,28 +51,8 @@ export default function Signup({
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <Link
-        href="/"
-        className="z-10 absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
-        >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>{" "}
-        Back
-      </Link>
-
       <form className="animate-in mt-10 flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+      <h1 className="mb-10 text-bold text-2xl lg:text-3xl">Get Your Team Started</h1>
         <label className="text-md" htmlFor="team_name">
           Team Name
         </label>
@@ -116,9 +96,9 @@ export default function Signup({
         <SubmitButton
           formAction={signUp}
           className="bg-green-700 rounded-md px-4 py-2 text-white mb-2"
-          pendingText="Signing Up..."
+          pendingText="Creating Team..."
         >
-          Sign Up
+          Create Team Account
         </SubmitButton>
         <div className="flex gap-x-2 text-[15px] self-center">
           <p>Already have an account?</p>

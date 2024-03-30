@@ -33,7 +33,8 @@ const TaskCardDetails = () => {
     const newCommentData = {
       id: generateCommentId(),
       text: commentText,
-      author: user?.id as string,
+      author: user?.email as string,
+      // author: user?.id as string,
     };
 
     dispatch(setActionTriggered(true));
@@ -44,6 +45,7 @@ const TaskCardDetails = () => {
       .select("tasks")
       .eq("admin_id", user?.id)
       .single();
+
 
     if (taskError) {
       toast.error("Please try again ", {
@@ -131,7 +133,9 @@ const TaskCardDetails = () => {
             >
               <div className="flex gap-x-2  items-center">
                 <Image src={member} alt="Team members avatar" />
-                <p className="font-medium text-secColor text-sm">Jeff Arthur</p>
+                <p className="font-medium text-secColor text-sm">
+                  {comment.author}
+                </p>
               </div>
               <p className="text-sm text-primColor pl-8">{comment.text}</p>
             </div>
