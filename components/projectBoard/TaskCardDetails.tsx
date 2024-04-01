@@ -1,5 +1,8 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { getTeamData } from "@/hooks/getTeamData";
 import { useAuth } from "@/hooks/UseAuth";
 import { generateCommentId } from "../../hooks/generateId";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
@@ -12,8 +15,6 @@ import comment from "@/public/assets/comments.svg";
 import member from "@/public/assets/member.svg";
 import member1 from "@/public/assets/member1.svg";
 import member2 from "@/public/assets/member2.svg";
-import Image from "next/image";
-import { createClient } from "@/utils/supabase/client";
 
 const TaskCardDetails = () => {
   const supabase = createClient();
@@ -33,39 +34,27 @@ const TaskCardDetails = () => {
     const newCommentData = {
       id: generateCommentId(),
       text: commentText,
-      author: user?.email as string,
+      author: user?.email as string, //TODO: This should be display name after user has set it
       // author: user?.id as string,
     };
 
     dispatch(setActionTriggered(true));
 
-    // Retrieve the existing comments first
-    const { data: existingTasks, error: taskError } = await supabase
-      .from("teams")
-      .select("tasks")
-      .eq("admin_id", user?.id)
-      .single();
+    const teamData = await getTeamData(user);
 
-
-    if (taskError) {
-      toast.error("Please try again ", {
-        pauseOnHover: false,
-      });
-      return;
-    }
-
-    const existingDataFromDatabase: taskDataObj[] = existingTasks?.tasks;
-    const targetObject = existingDataFromDatabase.find(
+    const existingDataFromDatabase = teamData?.tasks;
+    const targetObject = existingDataFromDatabase?.find(
       (item) => item.task_id === selectedTask.task_id
     );
 
-    // Update the comments property
+    // // Update the comments property
     targetObject?.comments.push(newCommentData);
 
+    // Select matching team database
     const { data: updatedTask, error: updateError } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
-      .eq("admin_id", user?.id)
+      .eq('admin_id', user?.id)  //TODO: Check for when member exist also
       .select();
 
     if (!updateError && targetObject) {

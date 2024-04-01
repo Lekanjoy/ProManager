@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { teamData, taskDataObj }from "../types";
+import { teamData, taskDataObj } from "../types";
 import { createClient } from "@/utils/supabase/client";
+import { getTeamData } from "@/hooks/getTeamData";
 
 const supabase = createClient();
 
@@ -12,24 +13,7 @@ export const fetchInitialData = createAsyncThunk(
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Select matching team database
-    const { data: teamData1, error: memberError } = await supabase
-      .from("teams") 
-      .select("*")
-      .eq('team_member @>', '["' + user?.id + '"]')
-      .single();
-
-      const { data: teamData2, error: adminError } = await supabase
-      .from("teams")
-      .select("*")
-      .eq('admin_id', user?.id)
-      .single();
-
-    if (memberError || adminError) {
-      console.error(memberError, adminError);
-    }
-
-    return teamData1 ?? teamData2;
+   return await getTeamData(user) as teamData;
   }
 );
 
