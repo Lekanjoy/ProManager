@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../store/store";
 import { generateCommentId } from "../../hooks/generateId";
 import { toast } from "react-toastify";
 import { createClient } from "@/utils/supabase/client";
+import { getTeamData } from "@/hooks/getTeamData";
 
 const AddTaskModal = () => {
   const supabase = createClient();
@@ -46,6 +47,18 @@ const AddTaskModal = () => {
 
     dispatch(setActionTriggered(true));
     setLoading(true);
+
+     //Check if team member wants to create task
+     const data = await getTeamData(user);
+     if (user?.id !==  data?.admin_id) {
+       toast.warn("Admins only: Task creation restricted.", {
+         pauseOnHover: false,
+       });
+       setLoading(false);
+       return;
+     }
+
+    // Make only admin to create tasks
     try {
       const { data: existingTask, error } = await supabase
         .from("teams")
@@ -88,24 +101,24 @@ const AddTaskModal = () => {
     <section className="bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 flex justify-center items-center">
       <form
         onSubmit={handleNewTask}
-        className="flex flex-col gap-y-3 bg-white shadow-md rounded-lg p-4 w-[400px]"
+        className="flex flex-col gap-y-3 bg-background text-foreground shadow-md rounded-lg p-4 w-[400px]"
       >
-        <p className="text-2xl font-semibold mb-3 text-secColor">
+        <p className="text-2xl font-semibold mb-3 ">
           Add New Task
         </p>
         <input
           ref={titleRef}
           type="text"
           placeholder="Enter Title"
-          className="border p-2 rounded"
+          className="border p-2 rounded bg-transparent"
         />
         <input
           ref={textRef}
           type="text"
           placeholder="Enter Text"
-          className="border p-2 rounded"
+          className="border p-2 rounded bg-transparent"
         />
-        <select ref={severityRef} required className="border p-2 rounded">
+        <select ref={severityRef} required className="border text-foreground p-2 rounded bg-transparent">
           <option value="" disabled selected>
             Select priority
           </option>
