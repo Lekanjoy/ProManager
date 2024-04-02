@@ -84,8 +84,8 @@ const TaskCardDetails = () => {
   }
 
   return (
-    <section className="z-50 bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 flex justify-center items-center">
-      <div className="relative flex flex-col gap-y-3 bg-white shadow-md rounded-lg px-8 py-6 w-[500px] max-h-[420px] overflow-auto">
+    <section className="z-50 bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center">
+      <div className="relative flex flex-col gap-y-3 bg-background shadow-md rounded-lg px-6 py-6  max-h-[420px] overflow-auto max-w-full lg:w-[500px]">
         <p
           className={`py-1 px-[6px] w-fit rounded text-white text-xs font-medium ${
             taskDetails.priority === "High"
@@ -99,7 +99,7 @@ const TaskCardDetails = () => {
           {taskDetails.priority}
         </p>
         <div className=" my-2">
-          <h1 className="text-secColor font-semibold mb-[6px] text-3xl ">
+          <h1 className="text-foreground font-semibold mb-[6px] text-3xl ">
             {taskDetails.title}
           </h1>
           <p className="text-xs">{taskDetails.description}</p>
@@ -127,11 +127,11 @@ const TaskCardDetails = () => {
           return (
             <div
               key={comment.id}
-              className=" w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex gap-x-2"
+              className=" w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words"
             >
-              <div className="flex gap-x-2  items-center">
+              <div className="w-full flex gap-x-1  items-center">
                 <Image src={member} alt="Team members avatar" />
-                <p className="font-medium text-secColor text-sm">
+                <p className="font-bold text-secColor text-xs">
                   {comment.author}
                 </p>
               </div>
