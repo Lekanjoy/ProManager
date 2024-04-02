@@ -1,24 +1,23 @@
 "use client";
-import { useAuth } from "@/hooks/UseAuth";
-import { useTypedSelector } from "@/store/store";
 import { useState } from "react";
+import { useAuth } from "@/hooks/UseAuth";
 import { toast } from "react-toastify";
 import { inviteMember } from "@/serverActions/inviteAction";
+import { getTeamData } from "@/hooks/getTeamData";
 
 const InviteForm = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const tasksData = useTypedSelector((store) => store.tasks.tasks);
   const { user } = useAuth();
-
-  const admin_id = tasksData[0]?.admin_id;
+ 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
     // Admin should only have the invitation privilege
-    if (user?.id !== admin_id) {
+    const data = await getTeamData(user);
+    if (user?.id !==  data?.admin_id) {
       toast.warn("Member invites by admin only", {
         pauseOnHover: false,
       });
@@ -42,7 +41,7 @@ const InviteForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-4/5 flex flex-col gap-y-4 px-4 py-8 bg-white border shadow rounded lg:w-[500px]"
+      className="w-4/5 flex flex-col gap-y-4 px-4 py-8 bg-background border shadow rounded lg:w-[500px]"
     >
       <h2 className=" text-xl font-semibold mb-4">Invite a team member</h2>
       <input

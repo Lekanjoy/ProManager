@@ -36,7 +36,7 @@ const Header = () => {
         />
       </div>
 
-      <div className="relative ">
+      <div className="relative hidden lg:block">
         <input
           type="search"
           placeholder="Search for anything..."

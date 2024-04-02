@@ -35,7 +35,6 @@ const TaskCardDetails = () => {
       id: generateCommentId(),
       text: commentText,
       author: user?.email as string, //TODO: This should be display name after user has set it
-      // author: user?.id as string,
     };
 
     dispatch(setActionTriggered(true));
@@ -50,14 +49,24 @@ const TaskCardDetails = () => {
     // // Update the comments property
     targetObject?.comments.push(newCommentData);
 
-    // Select matching team database
-    const { data: updatedTask, error: updateError } = await supabase
+    // Select matching team database and update tasks column commentfor current admin or team member
+
+    const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
-      .eq('admin_id', user?.id)  //TODO: Check for when member exist also
+      .eq("admin_id", user?.id)
       .select();
 
-    if (!updateError && targetObject) {
+    const { data: updatedTaskMember, error: updateErrorMember } = await supabase
+      .from("teams")
+      .update({ tasks: existingDataFromDatabase })
+      .eq("team_member @>", '["' + user?.id + '"]')
+      .select();
+
+    // Combine the results
+    const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember);
+
+    if (updatedTask && updatedTask?.length > 0 && targetObject) {
       setTaskDetails(targetObject);
       setCommentText("");
       dispatch(setActionTriggered(false));
@@ -66,7 +75,7 @@ const TaskCardDetails = () => {
         pauseOnHover: false,
       });
     } else {
-      console.error("Error updating task with comments:", updateError);
+      console.error("Error updating task with comment");
       setLoading(false);
       toast.error("Please try again ", {
         pauseOnHover: false,
