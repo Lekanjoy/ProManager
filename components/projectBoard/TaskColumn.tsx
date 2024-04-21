@@ -6,7 +6,7 @@ import TaskCard from "./TaskCard";
 import { toggleModal } from "../../features/showModalSlice";
 import { useEffect, useMemo } from "react";
 import { fetchInitialData } from "../../features/addNewTaskSlice";
-import { ColumnDataType, taskDataObj, teamData } from "../../types";
+import { ColumnDataType, taskDataObj } from "../../types";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -23,6 +23,7 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
 
   useEffect(() => {
     dispatch(fetchInitialData());
+    console.log('I am re-rendered in task column');
   }, [isTriggered]);
 
   const {
@@ -36,7 +37,6 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
       type: "Column",
       column,
     },
-    // disabled: editMode,
   });
 
   const style = {
@@ -68,7 +68,7 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
     return tasks.map((task) => task.task_id);
   }, [tasks]);
   
-
+  
   return (
     <div
       ref={setNodeRef}
