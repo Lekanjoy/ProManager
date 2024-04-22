@@ -1,7 +1,15 @@
 import { arrayMove } from "@dnd-kit/sortable";
 import { createClient } from "../supabase/client";
 import { Dispatch, SetStateAction } from "react";
-import { DragStartEvent, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
+import {
+  DragStartEvent,
+  DragEndEvent,
+  DragOverEvent,
+  CollisionDetection,
+  closestCorners,
+  closestCenter,
+  pointerWithin,
+} from "@dnd-kit/core";
 import { ColumnDataType, taskDataObj } from "@/types";
 import { User } from "@supabase/supabase-js";
 
@@ -112,3 +120,18 @@ export function onDragOver(
     });
   }
 }
+export const customCollisionDetectionAlgorithm: CollisionDetection = (args) => {
+  const closestCornersCollisions = closestCorners(args);
+  const closestCenterCollisions = closestCenter(args);
+  const pointerWithinCollisions = pointerWithin(args);
+
+  if (
+    closestCornersCollisions.length > 0 &&
+    closestCenterCollisions.length > 0 &&
+    pointerWithinCollisions.length > 0
+  ) {
+    return pointerWithinCollisions;
+  }
+
+  return [];
+};

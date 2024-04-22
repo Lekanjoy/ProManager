@@ -21,17 +21,16 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
   const isTriggered = useTypedSelector((store) => store.isTriggered);
   const loading = useTypedSelector((store) => store.tasks.loading);
 
+  const tasksIds = useMemo(() => {
+    return tasks.map((task) => task.task_id);
+  }, [tasks]);
+
   useEffect(() => {
     dispatch(fetchInitialData());
-    console.log('I am re-rendered in task column');
+    console.log("I am re-rendered in task column");
   }, [isTriggered]);
 
-  const {
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, transform, transition, isDragging } = useSortable({
     id: column.id,
     data: {
       type: "Column",
@@ -64,20 +63,13 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
     );
   }
 
-  const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.task_id);
-  }, [tasks]);
-  
-  
   return (
     <div
       ref={setNodeRef}
       style={style}
       className=" min-h-[700px] bg-[#F5F5F5] rounded-t-2xl border px-5 pt-5 pb-10"
     >
-      <div
-        className="flex justify-between pb-6 border-b-[3px] border-[#5030E5] mb-7"
-      >
+      <div className="flex justify-between pb-6 border-b-[3px] border-[#5030E5] mb-7">
         <div className="flex items-center gap-x-1">
           <Image src={todoMark} alt="Todo Line" />
           <p className="text-secColor font-medium text-sm">{column.title}</p>
@@ -93,20 +85,20 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
         />
       </div>
       <div className="flex flex-col gap-y-5 ">
-      <SortableContext items={tasksIds}>
-        {loading
-          ? Array(4)
-              .fill("")
-              .map((_, i) => (
-                <p
-                  key={i}
-                  className="w-full h-32 bg-white p-5 rounded-2xl text-primColor cursor-pointer animate-pulse"
-                ></p>
-              ))
-          : tasks?.map((task) => {
-              return <TaskCard key={task.task_id} task={task} />;
-            })}
-      </SortableContext>
+        <SortableContext items={tasksIds}>
+          {loading
+            ? Array(4)
+                .fill("")
+                .map((_, i) => (
+                  <p
+                    key={i}
+                    className="w-full h-32 bg-white p-5 rounded-2xl text-primColor cursor-pointer animate-pulse"
+                  ></p>
+                ))
+            : tasks?.map((task) => {
+                return <TaskCard key={task.task_id} task={task} />;
+              })}
+        </SortableContext>
       </div>
     </div>
   );

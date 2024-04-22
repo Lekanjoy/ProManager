@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
@@ -41,7 +40,6 @@ const TaskCard = ({ task }: ITaskCardProps) => {
       type: "Task",
       task,
     },
-    // disabled: editMode,
   });
 
   const style = {
@@ -66,7 +64,6 @@ const TaskCard = ({ task }: ITaskCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      // draggable="true"
       className="w-full bg-white p-5 rounded-2xl text-primColor cursor-grab"
     >
       <div className="flex items-center justify-between mb-1">

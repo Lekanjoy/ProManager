@@ -10,15 +10,13 @@ import {
   DragStartEvent,
   PointerSensor,
   useSensor,
-  useSensors,
+  useSensors
 } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
+import { customCollisionDetectionAlgorithm, onDragEnd, onDragOver, onDragStart } from "@/utils/dnd-kit/funct";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
-import { onDragEnd, onDragOver, onDragStart } from "@/utils/dnd-kit/funct";
-
 const defaultCols: ColumnDataType[] = [
   {
     id: "todo",
@@ -39,9 +37,9 @@ const ProjectContainer = () => {
   const tasksData: teamData[] = useTypedSelector((store) => store.tasks.tasks);
   
   const [columns, setColumns] = useState(defaultCols);
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [tasks, setTasks] = useState<taskDataObj[] | null>(null);
   const [activeTask, setActiveTask] = useState(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -55,16 +53,17 @@ const ProjectContainer = () => {
     console.log('I am re-rendered in project container');
   }, [tasksData]);
 
+
+
   return (
     <section className="w-full grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-2 lg:grid-cols-3 lg:gap-x-4">
       <DndContext
         sensors={sensors}
-        onDragStart={(event: DragStartEvent,) => onDragStart(event, setActiveTask)}
+        onDragStart={(event: DragStartEvent) => onDragStart(event, setActiveTask)}
         onDragEnd={(event: DragEndEvent) => onDragEnd(event, setActiveTask, setColumns)}
         onDragOver={(event: DragOverEvent) => onDragOver(event, setTasks, user)}
+        collisionDetection={customCollisionDetectionAlgorithm}
       >
-        {/* <div> */}
-        <SortableContext items={columnsId}>
           {columns.map((col) => {
             return (
               <TaskColumn
@@ -74,9 +73,6 @@ const ProjectContainer = () => {
               />
             );
           })}
-        </SortableContext>
-        {/* </div> */}
-
         {createPortal(
           <DragOverlay>
             {activeTask && <TaskCard task={activeTask} />}
