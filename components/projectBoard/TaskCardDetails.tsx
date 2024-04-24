@@ -49,7 +49,7 @@ const TaskCardDetails = () => {
     // // Update the comments property
     targetObject?.comments.push(newCommentData);
 
-    // Select matching team database and update tasks column commentfor current admin or team member
+    // Select matching team database and update tasks column comment for current admin or team member
 
     const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
       .from("teams")
@@ -60,7 +60,7 @@ const TaskCardDetails = () => {
     const { data: updatedTaskMember, error: updateErrorMember } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
-      .eq("team_member @>", '["' + user?.id + '"]')
+      .contains('team_member @>', '["' + user?.id + '"]')
       .select();
 
     // Combine the results

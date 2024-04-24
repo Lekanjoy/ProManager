@@ -103,15 +103,27 @@ export function onDragOver(
       const newTasks = [...tasks]; // Create a new array using the spread operator
       newTasks[activeIndex] = { ...tasks[activeIndex], columnId: overId };
 
-      // Select matching team  and update current task status in database after 10s
+      // Select matching team  and update current task status in database by Admin/Member after 10s
       setTimeout(async () => {
         const supabase = createClient();
         try {
-          const { data, error } = await supabase
+          const { data: adminUpdate, error: adminError } = await supabase
             .from("teams")
             .update({ tasks: newTasks })
-            .eq("admin_id", user?.id)
+            .eq("admin_id", user?.id) 
             .select();
+
+            const { data: memberUpdate, error: memberError } = await supabase
+            .from("teams")
+            .update({ tasks: newTasks })
+            .contains('team_member @>', '["' + user?.id + '"]')
+            .select();
+
+            if(adminError && memberError) {
+              alert('Failed to update task')
+            }
+            
+
         } catch (error) {
           console.log(error);
         }

@@ -27,7 +27,6 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
 
   useEffect(() => {
     dispatch(fetchInitialData());
-    console.log("I am re-rendered in task column");
   }, [isTriggered]);
 
   const { setNodeRef, transform, transition, isDragging } = useSortable({

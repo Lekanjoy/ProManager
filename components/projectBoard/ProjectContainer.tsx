@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/UseAuth";
 import { customCollisionDetectionAlgorithm, onDragEnd, onDragOver, onDragStart } from "@/utils/dnd-kit/funct";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+
 const defaultCols: ColumnDataType[] = [
   {
     id: "todo",
@@ -50,7 +51,6 @@ const ProjectContainer = () => {
 
   useEffect(() => {
     setTasks(tasksData[0]?.tasks);
-    console.log('I am re-rendered in project container');
   }, [tasksData]);
 
 
