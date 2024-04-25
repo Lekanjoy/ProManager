@@ -10,13 +10,19 @@ import {
   DragStartEvent,
   PointerSensor,
   useSensor,
-  useSensors
+  useSensors,
 } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
-import { customCollisionDetectionAlgorithm, onDragEnd, onDragOver, onDragStart } from "@/utils/dnd-kit/funct";
+import {
+  customCollisionDetectionAlgorithm,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
+} from "@/utils/dnd-kit/funct";
 import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
+import { createClient } from "@/utils/supabase/client";
 
 const defaultCols: ColumnDataType[] = [
   {
@@ -36,7 +42,7 @@ const defaultCols: ColumnDataType[] = [
 const ProjectContainer = () => {
   const { user } = useAuth();
   const tasksData: teamData[] = useTypedSelector((store) => store.tasks.tasks);
-  
+
   const [columns, setColumns] = useState(defaultCols);
   const [tasks, setTasks] = useState<taskDataObj[] | null>(null);
   const [activeTask, setActiveTask] = useState(null);
@@ -50,33 +56,55 @@ const ProjectContainer = () => {
   );
 
   useEffect(() => {
+    const supabase = createClient();
+    const teams = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "teams" },
+        (payload) => {
+          const newTasks = (payload.new as { tasks: taskDataObj[] }).tasks;
+          setTasks(newTasks);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      teams.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     setTasks(tasksData[0]?.tasks);
   }, [tasksData]);
-
-
 
   return (
     <section className="w-full grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-2 lg:grid-cols-3 lg:gap-x-4">
       <DndContext
         sensors={sensors}
-        onDragStart={(event: DragStartEvent) => onDragStart(event, setActiveTask)}
-        onDragEnd={(event: DragEndEvent) => onDragEnd(event, setActiveTask, setColumns)}
+        onDragStart={(event: DragStartEvent) =>
+          onDragStart(event, setActiveTask)
+        }
+        onDragEnd={(event: DragEndEvent) =>
+          onDragEnd(event, setActiveTask, setColumns)
+        }
         onDragOver={(event: DragOverEvent) => onDragOver(event, setTasks, user)}
         collisionDetection={customCollisionDetectionAlgorithm}
       >
-          {columns.map((col) => {
-            return (
-              <TaskColumn
-                key={col.id}
-                column={col}
-                tasks={tasks?.filter((task) => task.columnId === col.id) || []}
-              />
-            );
-          })}
+        {columns.map((col) => {
+          return (
+            <TaskColumn
+              key={col.id}
+              column={col}
+              tasks={tasks?.filter((task) => task.columnId === col.id) || []}
+            />
+          );
+        })}
         {createPortal(
           <DragOverlay>
             {activeTask && <TaskCard task={activeTask} />}
-          </DragOverlay>, document.body
+          </DragOverlay>,
+          document.body
         )}
       </DndContext>
     </section>

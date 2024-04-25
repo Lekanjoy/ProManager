@@ -50,11 +50,11 @@ const TaskCardDetails = () => {
     targetObject?.comments.push(newCommentData);
 
     // Select matching team database and update tasks column comment for current admin or team member
-
+    
     const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
-      .eq("admin_id", user?.id)
+      .eq("admin_id", user?.id as string)
       .select();
 
     const { data: updatedTaskMember, error: updateErrorMember } = await supabase
@@ -64,7 +64,9 @@ const TaskCardDetails = () => {
       .select();
 
     // Combine the results
-    const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember);
+    const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember?? []);
+    console.log(updatedTask);
+    
 
     if (updatedTask && updatedTask?.length > 0 && targetObject) {
       setTaskDetails(targetObject);

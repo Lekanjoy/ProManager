@@ -110,7 +110,7 @@ export function onDragOver(
           const { data: adminUpdate, error: adminError } = await supabase
             .from("teams")
             .update({ tasks: newTasks })
-            .eq("admin_id", user?.id) 
+            .eq("admin_id", user?.id as string) 
             .select();
 
             const { data: memberUpdate, error: memberError } = await supabase
