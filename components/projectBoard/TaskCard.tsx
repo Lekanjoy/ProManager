@@ -11,7 +11,7 @@ import file from "@/public/assets/folder-2.svg";
 import member from "@/public/assets/member.svg";
 import member1 from "@/public/assets/member1.svg";
 import member2 from "@/public/assets/member2.svg";
-import Grip from "../icons/Grip";
+import { GripIcon } from "lucide-react";
 
 interface ITaskCardProps {
   task: taskDataObj;
@@ -74,7 +74,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
         >
           {priority}
         </p>
-        <Grip/>
+        <GripIcon size={16}/>
       </div>
       <div onClick={viewTaskDetails} className="cursor-pointer">
         <div className=" mb-8">
