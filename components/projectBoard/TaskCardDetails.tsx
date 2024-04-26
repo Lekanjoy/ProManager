@@ -50,7 +50,6 @@ const TaskCardDetails = () => {
     targetObject?.comments.push(newCommentData);
 
     // Select matching team database and update tasks column comment for current admin or team member
-    
     const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
@@ -60,13 +59,12 @@ const TaskCardDetails = () => {
     const { data: updatedTaskMember, error: updateErrorMember } = await supabase
       .from("teams")
       .update({ tasks: existingDataFromDatabase })
-      .contains('team_member @>', '["' + user?.id + '"]')
+      .contains("team_member @>", '["' + user?.id + '"]')
       .select();
 
     // Combine the results
-    const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember?? []);
+    const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
     console.log(updatedTask);
-    
 
     if (updatedTask && updatedTask?.length > 0 && targetObject) {
       setTaskDetails(targetObject);
@@ -115,7 +113,10 @@ const TaskCardDetails = () => {
           </div>
           <div className="flex gap-x-1 items-center text-xs">
             <Image src={comment} alt="Comment Icon" />
-            <p>{taskDetails.comments.length} comments</p>
+            <p>
+              {taskDetails.comments.length} comment
+              {taskDetails.comments.length > 1 && "s"}
+            </p>
           </div>
           <div className="flex gap-x-1 items-center text-xs">
             <Image src={file} alt="files Icon" />
@@ -149,7 +150,6 @@ const TaskCardDetails = () => {
         >
           <textarea
             rows={1}
-            // cols={5}
             placeholder="Drop a comment . . . ."
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}

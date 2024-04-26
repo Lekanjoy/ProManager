@@ -55,6 +55,7 @@ const ProjectContainer = () => {
     })
   );
 
+  // Subscribe to all realtime events change in datbase
   useEffect(() => {
     const supabase = createClient();
     const teams = supabase
