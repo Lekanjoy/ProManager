@@ -64,7 +64,7 @@ const AddTaskModal = () => {
       const { data: existingTask, error } = await supabase
         .from("teams")
         .select("tasks")
-        .eq("admin_id", user?.id)
+        .eq("admin_id", user?.id as string)
         .single();
 
       if (error) {
@@ -79,7 +79,7 @@ const AddTaskModal = () => {
         const { data: updatedTask, error: updateError } = await supabase
           .from("teams")
           .update({ tasks: combinedTasks })
-          .eq("admin_id", user?.id)
+          .eq("admin_id", user?.id as string)
           .select();
 
         dispatch(setActionTriggered(false));

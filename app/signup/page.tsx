@@ -3,13 +3,13 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "../login/submit-button";
+import { taskDataObj } from "@/types";
 
 export default function Signup({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
-
   const signUp = async (formData: FormData) => {
     "use server";
 
@@ -36,9 +36,9 @@ export default function Signup({
     const initialTeamData = {
       team_name,
       description,
-      admin_id: signUpData?.user?.id,
-      team_member: [],
-      tasks: [],
+      admin_id: signUpData?.user?.id!,
+      team_member: [] as string[],
+      tasks: [] as taskDataObj[],
     };
 
     const { data: newTeamData, error: newTeamDataError } = await supabase
@@ -52,7 +52,9 @@ export default function Signup({
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <form className="animate-in mt-10 flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-      <h1 className="mb-10 text-bold text-2xl lg:text-3xl">Get Your Team Started</h1>
+        <h1 className="mb-10 text-bold text-2xl lg:text-3xl">
+          Get Your Team Started
+        </h1>
         <label className="text-md" htmlFor="team_name">
           Team Name
         </label>
