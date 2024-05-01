@@ -11,9 +11,10 @@ export type teamData = {
 }
 
 
-export type taskDataObj= {
+export type taskDataObj = {
   task_id: number;
   columnId: UniqueIdentifier,
+  created_at:string;
   files: string[];
   title: string;
   description: string;

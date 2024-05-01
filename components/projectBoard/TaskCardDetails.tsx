@@ -16,15 +16,7 @@ import member from "@/public/assets/member.svg";
 import member1 from "@/public/assets/member1.svg";
 import member2 from "@/public/assets/member2.svg";
 import { Trash2 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import DeleteDialog from "../ui/components/DeleteDialog";
 
 const TaskCardDetails = () => {
   const supabase = createClient();
@@ -37,6 +29,7 @@ const TaskCardDetails = () => {
   const [taskDetails, setTaskDetails] = useState(selectedTask);
   const [loading, setLoading] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
   async function addComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -74,7 +67,6 @@ const TaskCardDetails = () => {
 
     // Combine the results
     const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
-    console.log(updatedTask);
 
     if (updatedTask && updatedTask?.length > 0 && targetObject) {
       setTaskDetails(targetObject);
@@ -94,22 +86,22 @@ const TaskCardDetails = () => {
   }
 
   async function deleteTask() {
-        // Admin should only have the invitation privilege
+    // Admin should only have the task deletion privilege
     const teamData = await getTeamData(user);
-    if (user?.id !==  teamData?.admin_id) {
+    if (user?.id !== teamData?.admin_id) {
       toast.warn("Delete action by admin only", {
         pauseOnHover: false,
       });
-      setLoading(false);
       return;
     }
 
+    // Delete selected Task
     const existingDataFromDatabase = teamData?.tasks;
     const newDataForDatabase = existingDataFromDatabase?.filter(
       (item) => item.task_id !== selectedTask.task_id
     );
 
-    // Select matching team database and update tasks column comment for current admin
+    // Select matching team database and update tasks column after deletion for only admin
     const { data, error } = await supabase
       .from("teams")
       .update({ tasks: newDataForDatabase })
@@ -123,7 +115,7 @@ const TaskCardDetails = () => {
         pauseOnHover: false,
       });
     } else {
-      console.error("Error updating task with comment");
+      console.error("Error deleting task");
       toast.error("Something went wrong!", {
         pauseOnHover: false,
       });
@@ -148,7 +140,10 @@ const TaskCardDetails = () => {
             >
               {taskDetails.priority}
             </p>
-            <div onClick={() => setIsAlertModalOpen(true)} className="flex p-2 rounded-full items-center justify-center bg-black/10 cursor-pointer hover:scale-125 duration-200 ease-in-out">
+            <div
+              onClick={() => setIsAlertModalOpen(true)}
+              className="flex p-2 rounded-full items-center justify-center bg-black/10 cursor-pointer hover:scale-125 duration-200 ease-in-out"
+            >
               <Trash2 size={16} color="red" />
             </div>
           </div>
@@ -235,26 +230,13 @@ const TaskCardDetails = () => {
           X
         </p>
       </section>
+
       {/* Delete Alert Dialog */}
-      <AlertDialog open={isAlertModalOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle> Delete Task</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this task? This action cannot be
-              undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex-row">
-            <AlertDialogAction onClick={() => setIsAlertModalOpen(false)}>
-              Cancel
-            </AlertDialogAction>
-            <AlertDialogAction onClick={deleteTask} className="bg-red-600">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteDialog
+        isAlertModalOpen={isAlertModalOpen}
+        setIsAlertModalOpen={setIsAlertModalOpen}
+        deleteTask={deleteTask}
+      />
     </>
   );
 };

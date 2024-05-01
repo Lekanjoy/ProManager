@@ -1,33 +1,64 @@
 "use client";
 import Image from "next/image";
 import { useTypedSelector } from "../store/store";
-import filter from "@/public/assets/filter.svg";
-import date from "@/public/assets/calendar.svg";
-import chevronDown from "@/public/assets/arrow-down.svg";
-import spinner from '@/public/assets/Circles-menu-3.gif'
+import spinner from "@/public/assets/Circles-menu-3.gif";
+import { SelectFilter } from "./ui/components/SelectFilter";
+import { Dispatch, SetStateAction, useState } from "react";
+import { CalendarDays, X } from "lucide-react";
+import { DateFilter } from "./ui/components/DateFilter";
 
-const ProjectHeaders = () => {
+ interface filterProps {
+  filterValue: string;
+  setFilterValue: Dispatch<SetStateAction<string>>;
+  resetTasks: () => void;
+  date: Date | undefined;
+  setDate: Dispatch<SetStateAction< Date | undefined>>;
+}
+
+const ProjectHeaders = ({
+  filterValue,
+  setFilterValue,
+  resetTasks,
+  date,
+  setDate,
+}: filterProps) => {
+
   const tasksData = useTypedSelector((store) => store.tasks.tasks);
   const loading = useTypedSelector((store) => store.tasks.loading);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   return (
     <section className="flex flex-col gap-y-10 py-10">
       {loading ? (
-        <Image unoptimized src={spinner} alt="Spinner" /> 
+        <Image unoptimized src={spinner} alt="Spinner" />
       ) : (
         <h1 className="text-secColor text-5xl font-semibold">
           {tasksData[0]?.team_name}
         </h1>
       )}
-      <div className="flex gap-x-3 text-primColor">
-        <button className="flex gap-x-1 items-center rounded-md py-[6px] px-4 border border-primColor text-sm outline-none">
-          <Image src={filter} alt="Filter icon" /> <p>Filter</p>
-          <Image src={chevronDown} alt="arrow down icon" className="pl-2" />
-        </button>
-        <button className="flex gap-x-1 items-center rounded-md py-[6px] px-4 border border-primColor text-sm outline-none">
-          <Image src={date} alt="date icon" /> <p>Today</p>
-          <Image src={chevronDown} alt="arrow down icon" className="pl-2" />
-        </button>
+      <div className="flex gap-x-3 items-center text-primColor">
+        <SelectFilter
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+        />
+        <div className="relative">
+          <CalendarDays
+            className="cursor-pointer"
+            size={16}
+            onClick={() => setShowDatePicker(!showDatePicker)}
+          />
+          {showDatePicker && <DateFilter date={date} setDate={setDate} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker}/>}
+        </div>
+
+        {filterValue || date ? (
+          <div
+            onClick={resetTasks}
+            className="h-5 flex items-center justify-center text-white gap-x-1 px-3 rounded text-xs bg-secColor/80 cursor-pointer"
+          >
+            <p>Reset</p>
+            <X size={12} />
+          </div>
+        ) : null}
       </div>
     </section>
   );

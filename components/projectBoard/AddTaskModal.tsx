@@ -35,6 +35,7 @@ const AddTaskModal = () => {
       {
         task_id: generateCommentId(),
         columnId: 'todo',
+        created_at: new Date().toLocaleDateString(),
         title: titleRef?.current?.value,
         description: textRef?.current?.value,
         priority: severityRef?.current?.value as string,

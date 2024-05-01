@@ -1,7 +1,6 @@
 "use client";
 import { useTypedSelector } from "@/store/store";
 import Header from "../Header";
-import ProjectHeaders from "../ProjectHeaders";
 import SideBar from "../SideBar";
 import AddTaskModal from "../projectBoard/AddTaskModal";
 import ProjectContainer from "../projectBoard/ProjectContainer";
@@ -16,8 +15,7 @@ const Dashboard = () => {
       <Header />
       <div className=" relative flex w-full ">
         <SideBar />
-        <section className=" flex flex-col px-6 w-full mb-20">
-          <ProjectHeaders />
+        <section className="px-6 w-full mb-20">
           <ProjectContainer />
         </section>
       </div>
