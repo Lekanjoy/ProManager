@@ -1,12 +1,14 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import  UseCloseOnOutsideClick  from "@/hooks/UseCloseOnOutsideClick";
+import { Dispatch, RefObject, SetStateAction, useRef } from "react";
 
 interface dateFilterProps {
   date: Date | undefined;
   setDate: Dispatch<SetStateAction<Date | undefined>>;
   showDatePicker: boolean;
   setShowDatePicker: Dispatch<SetStateAction<boolean>>;
+  triggerRef: RefObject<SVGSVGElement>
 }
 
 export function DateFilter({
@@ -14,38 +16,19 @@ export function DateFilter({
   setDate,
   showDatePicker,
   setShowDatePicker,
+  triggerRef
 }: dateFilterProps) {
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      calendarRef.current &&
-      event.target instanceof Node &&
-      !calendarRef.current.contains(event.target)
-    ) {
-      setShowDatePicker(false);
-    }
-  };
-
-  useEffect(() => {
-    if (showDatePicker) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showDatePicker]);
-
   return (
-    <div ref={calendarRef}>
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        onDayClick={() => setShowDatePicker(false)}
-        className="rounded-md border absolute bg-background top-[32px]"
-      />
-    </div>
+    <UseCloseOnOutsideClick Ref={calendarRef} isOpen={showDatePicker} setIsOpen={setShowDatePicker}  excludeRef={triggerRef}>
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          onDayClick={() => setShowDatePicker(false)}
+          className="rounded-md border absolute bg-background top-[32px]"
+        />
+    </UseCloseOnOutsideClick>
   );
 }

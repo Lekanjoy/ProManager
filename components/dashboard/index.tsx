@@ -19,7 +19,7 @@ const Dashboard = () => {
           <ProjectContainer />
         </section>
       </div>
-      {/* Modal */}
+      {/* Modals */}
       {showModal && <AddTaskModal />}
       {showTask && <TaskCardDetails />}
     </>

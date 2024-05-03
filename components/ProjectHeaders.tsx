@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useTypedSelector } from "../store/store";
 import spinner from "@/public/assets/Circles-menu-3.gif";
 import { SelectFilter } from "./ui/components/SelectFilter";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { CalendarDays, X } from "lucide-react";
 import { DateFilter } from "./ui/components/DateFilter";
 
@@ -26,6 +26,7 @@ const ProjectHeaders = ({
   const tasksData = useTypedSelector((store) => store.tasks.tasks);
   const loading = useTypedSelector((store) => store.tasks.loading);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const triggerRef = useRef<SVGSVGElement>(null)
 
   return (
     <section className="flex flex-col gap-y-10 py-10">
@@ -43,11 +44,12 @@ const ProjectHeaders = ({
         />
         <div className="relative">
           <CalendarDays
+          ref={triggerRef}
             className="cursor-pointer"
             size={16}
             onClick={() => setShowDatePicker(!showDatePicker)}
           />
-          {showDatePicker && <DateFilter date={date} setDate={setDate} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker}/>}
+          {showDatePicker && <DateFilter date={date} setDate={setDate} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker} triggerRef={triggerRef}/>}
         </div>
 
         {filterValue || date ? (

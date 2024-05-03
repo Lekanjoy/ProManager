@@ -206,7 +206,7 @@ const TaskCardDetails = () => {
           >
             <textarea
               rows={1}
-              placeholder="Drop a comment . . . ."
+              placeholder={`Comment as ${user?.email}...`}
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               className=" border border-primColor rounded-tl-none resize-none text-sm text-secColor placeholder:text-secColor w-full rounded-md py-3 px-2"

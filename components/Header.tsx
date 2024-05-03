@@ -1,8 +1,8 @@
-'use client'
-import { useState } from "react";
+"use client";
+import { useRef, useState } from "react";
 import { collapseAside } from "../features/asideCollapseSlice";
 import { useDispatch, useSelector } from "react-redux";
-import logo from '@/public/assets/colorfilter.svg';
+import logo from "@/public/assets/colorfilter.svg";
 import collapse from "@/public/assets/collapse.svg";
 import search from "@/public/assets/search-normal.svg";
 import questions from "@/public/assets/message-question.svg";
@@ -10,13 +10,28 @@ import notif from "@/public/assets/notification.svg";
 import avatar from "@/public/assets/avatar.svg";
 import Image from "next/image";
 import { useAuth } from "@/hooks/UseAuth";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import UseCloseOnOutsideClick from "@/hooks/UseCloseOnOutsideClick";
 
 const Header = () => {
   const dispatch = useDispatch();
   const collapseState = useSelector((store: any) => store.collapse);
   const { user } = useAuth();
-
   const [showUser, setShowUser] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const userProfileRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLImageElement>(null);
+  const router = useRouter();
+
+  const logOut = async () => {
+    setIsLoggingOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setIsLoggingOut(false);
+    return router.push("/login");
+  };
+
   return (
     <header className="w-full flex px-6 py-[22px] border-b border-[#DBDBDB] items-center justify-between gap-x-10">
       <div className="flex justify-between gap-x-11 items-center">
@@ -54,14 +69,35 @@ const Header = () => {
           <Image src={notif} alt="notif" />
         </div>
         <div className="relative flex items-center gap-x-2">
-          <Image src={avatar} alt="user profile" className="cursor-pointer" onClick={() => setShowUser(!showUser)}/>
+          <Image
+            src={avatar}
+            alt="user profile"
+            className="cursor-pointer"
+            onClick={() => setShowUser(!showUser)}
+            ref={triggerRef}
+          />
           {showUser && (
-            <div className="z-10 absolute top-[62px] right-0 bg-white shadow border rounded-md p-4 flex flex-col">
-              <p className="text-[#0D062D] font-medium leading-tight ">
-                {user?.email}
-              </p>
-              <p className="text-[#787486] text-sm leading-tight">Lagos, NG</p>
-            </div>
+            <UseCloseOnOutsideClick
+              Ref={userProfileRef}
+              isOpen={showUser}
+              setIsOpen={setShowUser}
+              excludeRef={triggerRef}
+            >
+              <div className="z-10 absolute top-[62px] right-0 bg-white shadow border rounded-md p-4 flex flex-col">
+                <p className="text-[#0D062D] font-medium leading-tight ">
+                  Hello, {user?.email}
+                </p>
+                <button
+                  disabled={isLoggingOut}
+                  onClick={logOut}
+                  className={`text-white px-2 py-1 bg-secColor mt-4 rounded ${
+                    isLoggingOut && "cursor-not-allowed bg-secColor/60"
+                  }`}
+                >
+                  Logout
+                </button>
+              </div>
+            </UseCloseOnOutsideClick>
           )}
         </div>
       </div>
