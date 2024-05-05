@@ -24,7 +24,6 @@ import { createPortal } from "react-dom";
 import TaskCard from "./TaskCard";
 import { createClient } from "@/utils/supabase/client";
 import ProjectHeaders from "../ProjectHeaders";
-import { log } from "console";
 
 const defaultCols: ColumnDataType[] = [
   {

@@ -74,7 +74,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
         >
           {priority}
         </p>
-        <GripIcon size={16}/>
+        <GripIcon size={20}/>
       </div>
       <div onClick={viewTaskDetails} className="cursor-pointer">
         <div className=" mb-8">

@@ -22,7 +22,7 @@ export default function Login({
     });
 
     if (error) {
-      return redirect("/login?message=Email or password incorrect");
+      return redirect(`/login?message=${error.message}`);
     }
 
     return redirect("/dashboard");

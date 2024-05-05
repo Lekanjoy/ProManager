@@ -15,7 +15,7 @@ const Dashboard = () => {
       <Header />
       <div className=" relative flex w-full ">
         <SideBar />
-        <section className="px-6 w-full mb-20">
+        <section className="px-6 w-full mb-20 z-[1]">
           <ProjectContainer />
         </section>
       </div>

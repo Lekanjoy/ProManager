@@ -29,7 +29,7 @@ export default function Signup({
     });
 
     if (error) {
-      return redirect("/signup?message=Could not create user");
+      return redirect(`/signup?message=${error.message}`);
     }
 
     // Create new team after succesful registration
@@ -46,11 +46,11 @@ export default function Signup({
       .insert([initialTeamData])
       .select();
     if (signUpData && newTeamData)
-      return redirect("/login?message=Check email to continue sign in process");
+      return redirect("/login?message=Check your email to continue sign in process");
   };
 
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2 pb-6">
       <form className="animate-in mt-10 flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
         <h1 className="mb-10 text-bold text-2xl lg:text-3xl">
           Get Your Team Started

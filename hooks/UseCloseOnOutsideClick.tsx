@@ -1,6 +1,6 @@
 'use client'
 
-// Custom Hook to remove visibiliity of a component based on clicks outside its container
+// Custom Hook to remove visibility of a component based on clicks outside its container
 import {useEffect} from 'react'
 
 const UseCloseOnOutsideClick = ({children, Ref, isOpen, setIsOpen, excludeRef }: {

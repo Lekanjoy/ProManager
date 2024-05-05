@@ -7,12 +7,12 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { CalendarDays, X } from "lucide-react";
 import { DateFilter } from "./ui/components/DateFilter";
 
- interface filterProps {
+interface filterProps {
   filterValue: string;
   setFilterValue: Dispatch<SetStateAction<string>>;
   resetTasks: () => void;
   date: Date | undefined;
-  setDate: Dispatch<SetStateAction< Date | undefined>>;
+  setDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 
 const ProjectHeaders = ({
@@ -22,11 +22,10 @@ const ProjectHeaders = ({
   date,
   setDate,
 }: filterProps) => {
-
   const tasksData = useTypedSelector((store) => store.tasks.tasks);
   const loading = useTypedSelector((store) => store.tasks.loading);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const triggerRef = useRef<SVGSVGElement>(null)
+  const triggerRef = useRef<SVGSVGElement>(null);
 
   return (
     <section className="flex flex-col gap-y-10 py-10">
@@ -44,12 +43,20 @@ const ProjectHeaders = ({
         />
         <div className="relative">
           <CalendarDays
-          ref={triggerRef}
+            ref={triggerRef}
             className="cursor-pointer"
             size={16}
             onClick={() => setShowDatePicker(!showDatePicker)}
           />
-          {showDatePicker && <DateFilter date={date} setDate={setDate} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker} triggerRef={triggerRef}/>}
+          {showDatePicker && (
+            <DateFilter
+              date={date}
+              setDate={setDate}
+              showDatePicker={showDatePicker}
+              setShowDatePicker={setShowDatePicker}
+              triggerRef={triggerRef}
+            />
+          )}
         </div>
 
         {filterValue || date ? (

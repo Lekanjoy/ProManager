@@ -105,31 +105,30 @@ export function onDragOver(
       newTasks[activeIndex] = { ...tasks[activeIndex], columnId: overId };
 
       // Select matching team  and update current task status in database by Admin/Member after 10s
-      // setTimeout(async () => {
-      //   const supabase = createClient();
-      //   try {
-      //     const { data: adminUpdate, error: adminError } = await supabase
-      //       .from("teams")
-      //       .update({ tasks: newTasks })
-      //       .eq("admin_id", user?.id as string) 
-      //       .select();
+      setTimeout(async () => {
+        const supabase = createClient();
+        try {
+          const { data: adminUpdate, error: adminError } = await supabase
+            .from("teams")
+            .update({ tasks: newTasks })
+            .eq("admin_id", user?.id as string) 
+            .select();
 
-      //       const { data: memberUpdate, error: memberError } = await supabase //TODO: Dragging over a column is not consistently updated in database
-      //       .from("teams")
-      //       .update({ tasks: newTasks })
-      //       .contains('team_member @>', '["' + user?.id + '"]')
-      //       .select();
+            const { data: memberUpdate, error: memberError } = await supabase
+            .from("teams")
+            .update({ tasks: newTasks })
+            .contains('team_member @>', '["' + user?.id + '"]')
+            .select();
 
-      //       if(adminError && memberError) {
-      //         alert('Failed to update task')
-      //       }
+            if(adminError && memberError) {
+              alert('Failed to update task')
+            }
             
 
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // }, 10000);
-      console.log(newTasks);
+        } catch (error) {
+          console.log(error);
+        }
+      }, 10000);
       
       return arrayMove(newTasks, activeIndex, activeIndex) || tasks; // Return the updated array or the original array if arrayMove returns falsy
     });

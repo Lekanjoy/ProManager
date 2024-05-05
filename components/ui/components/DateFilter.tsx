@@ -23,11 +23,11 @@ export function DateFilter({
   return (
     <UseCloseOnOutsideClick Ref={calendarRef} isOpen={showDatePicker} setIsOpen={setShowDatePicker}  excludeRef={triggerRef}>
         <Calendar
-          mode="single"
+          mode="single" 
           selected={date}
           onSelect={setDate}
           onDayClick={() => setShowDatePicker(false)}
-          className="rounded-md border absolute bg-background top-[32px]"
+          className="rounded-md border absolute bg-background top-[32px] -left-5 lg:-left-0"
         />
     </UseCloseOnOutsideClick>
   );

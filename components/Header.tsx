@@ -5,14 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import logo from "@/public/assets/colorfilter.svg";
 import collapse from "@/public/assets/collapse.svg";
 import search from "@/public/assets/search-normal.svg";
-import questions from "@/public/assets/message-question.svg";
-import notif from "@/public/assets/notification.svg";
 import avatar from "@/public/assets/avatar.svg";
 import Image from "next/image";
 import { useAuth } from "@/hooks/UseAuth";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import UseCloseOnOutsideClick from "@/hooks/UseCloseOnOutsideClick";
+import { BellRing, MessageCircleQuestion } from "lucide-react";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -64,15 +63,15 @@ const Header = () => {
         />
       </div>
       <div className="flex gap-x-5 items-center">
-        <div className="flex gap-x-2 items-center">
-          <Image src={questions} alt="questions" />
-          <Image src={notif} alt="notif" />
+        <div className="flex gap-x-2 items-center text-primColor">
+        <MessageCircleQuestion size={21}/>
+        <BellRing size={21}/>
         </div>
         <div className="relative flex items-center gap-x-2">
           <Image
             src={avatar}
             alt="user profile"
-            className="cursor-pointer"
+            className="cursor-pointer w-8 h-8"
             onClick={() => setShowUser(!showUser)}
             ref={triggerRef}
           />

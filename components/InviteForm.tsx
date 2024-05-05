@@ -34,6 +34,9 @@ const InviteForm = () => {
       });
     } catch (error) {
       setLoading(false);
+      toast.error("Invitation failed", {
+        pauseOnHover: false,
+      });
       console.error(error);
     }
   }

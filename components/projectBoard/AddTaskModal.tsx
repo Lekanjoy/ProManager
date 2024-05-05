@@ -100,7 +100,7 @@ const AddTaskModal = () => {
   }
 
   return (
-    <section className="bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center">
+    <section className="bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center z-10">
       <form
         onSubmit={handleNewTask}
         className="flex flex-col gap-y-3 bg-background text-foreground shadow-md rounded-lg p-4 w-full lg:w-[400px]"
