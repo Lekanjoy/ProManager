@@ -10,13 +10,11 @@ import { setActionTriggered } from "../../features/isActionTriggeredSlice";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 import { taskDataObj } from "../../types";
 import { toast } from "react-toastify";
-import file from "@/public/assets/folder-2.svg";
-import comment from "@/public/assets/comments.svg";
-import member from "@/public/assets/member.svg";
-import member1 from "@/public/assets/member1.svg";
-import member2 from "@/public/assets/member2.svg";
 import { Trash2 } from "lucide-react";
 import DeleteDialog from "../ui/components/DeleteDialog";
+import Comment from "./Comment";
+import CommentField from "./CommentField";
+import TaskStats from "./TaskStats";
 
 const TaskCardDetails = () => {
   const supabase = createClient();
@@ -153,76 +151,27 @@ const TaskCardDetails = () => {
             </h1>
             <p className="text-xs">{taskDetails.description}</p>
           </div>
-          <div className="flex items-center gap-x-6">
-            <div className="flex">
-              <Image src={member} alt="Team members avatar" />
-              <Image
-                src={member2}
-                alt="Team members avatar"
-                className="-ml-2"
-              />
-              <Image
-                src={member1}
-                alt="Team members avatar"
-                className="-ml-2"
-              />
-            </div>
-            <div className="flex gap-x-1 items-center text-xs">
-              <Image src={comment} alt="Comment Icon" />
-              <p>
-                {taskDetails.comments.length} comment
-                {taskDetails.comments.length > 1 && "s"}
-              </p>
-            </div>
-            <div className="flex gap-x-1 items-center text-xs">
-              <Image src={file} alt="files Icon" />
-              <p>
-                {taskDetails.files.length} file
-                {taskDetails.files.length > 1 && "s"}
-              </p>
-            </div>
-          </div>
 
+          <TaskStats taskDetails={taskDetails} />
+
+          {/* List out all comments */}
           {taskDetails.comments?.map((comment) => {
-            return (
-              <div
-                key={comment.id}
-                className=" w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words"
-              >
-                <div className="w-full flex gap-x-1  items-center">
-                  <Image src={member} alt="Team members avatar" />
-                  <p className="font-bold text-secColor text-xs">
-                    {comment.author}
-                  </p>
-                </div>
-                <p className="text-sm text-primColor pl-8">{comment.text}</p>
-              </div>
-            );
+            return <Comment key={comment.id} comment={comment} />;
           })}
+          {/* List out all comments */}
 
-          <form
-            onSubmit={addComment}
-            className="relative w-full mt-2 grid gap-y-2"
-          >
-            <textarea
-              rows={1}
-              placeholder={`Comment as ${user?.email}...`}
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              className=" border border-primColor rounded-tl-none resize-none text-sm text-secColor placeholder:text-secColor w-full rounded-md py-3 px-2"
-            ></textarea>
-            {commentText.length > 0 && (
-              <button
-                disabled={loading}
-                className={` text-white px-3 py-1 rounded-lg  justify-self-end  w-fit ${
-                  loading ? "bg-gray-400 cursor-not-allowed" : "bg-secColor"
-                }`}
-              >
-                Send
-              </button>
-            )}
-          </form>
+          {/* Comment input field */}
+          <CommentField
+            addComment={addComment}
+            commentText={commentText}
+            setCommentText={setCommentText}
+            user={user}
+            loading={loading}
+          />
+          {/* Comment input field */}
         </div>
+        
+        {/* Close Modal */}
         <p
           onClick={() => dispatch(toggleModal())}
           className="absolute right-8 z-20 top-3 bg-red-500 text-white cursor-pointer w-4 h-4 flex justify-center items-center p-4 font-bold rounded-full"
@@ -235,7 +184,8 @@ const TaskCardDetails = () => {
       <DeleteDialog
         isAlertModalOpen={isAlertModalOpen}
         setIsAlertModalOpen={setIsAlertModalOpen}
-        deleteTask={deleteTask}
+        deleteAction={deleteTask}
+        actionTakenOn={"Task"}
       />
     </>
   );

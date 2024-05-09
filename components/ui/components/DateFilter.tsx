@@ -18,7 +18,7 @@ export function DateFilter({
   setShowDatePicker,
   triggerRef
 }: dateFilterProps) {
-  const calendarRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null)
 
   return (
     <UseCloseOnOutsideClick Ref={calendarRef} isOpen={showDatePicker} setIsOpen={setShowDatePicker}  excludeRef={triggerRef}>
