@@ -10,8 +10,9 @@ import {
 import { Ellipsis } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 
-const CommentActions = ({setShowDeleteCommentModal}:  {
+const CommentActions = ({setShowEditModal, setShowDeleteCommentModal}:  {
     setShowDeleteCommentModal: Dispatch<SetStateAction<boolean>>;
+    setShowEditModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [position, setPosition] = useState("bottom");
 
@@ -24,9 +25,7 @@ const CommentActions = ({setShowDeleteCommentModal}:  {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            document.getElementById("trigger-edit")?.click();
-          }}
+         onClick={() => setShowEditModal(true)}
         >
           Edit
         </DropdownMenuItem>

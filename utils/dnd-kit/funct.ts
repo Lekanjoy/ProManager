@@ -83,7 +83,6 @@ export function onDragOver(
           ...tasks[activeIndex],
           columnId: tasks[overIndex].columnId,
         };
-        console.log(newTasks);
         return arrayMove(newTasks, activeIndex, overIndex - 1);
       }
 
@@ -124,7 +123,6 @@ export function onDragOver(
               alert('Failed to update task')
             }
             
-
         } catch (error) {
           console.log(error);
         }

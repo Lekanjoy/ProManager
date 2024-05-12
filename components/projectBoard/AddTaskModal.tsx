@@ -5,13 +5,15 @@ import { useAuth } from "@/hooks/UseAuth";
 import { setActionTriggered } from "../../features/isActionTriggeredSlice";
 import { useAppDispatch } from "../../store/store";
 import { generateCommentId } from "../../hooks/generateId";
-import { toast } from "react-toastify";
 import { createClient } from "@/utils/supabase/client";
 import { getTeamData } from "@/hooks/getTeamData";
+import { useToast } from "../ui/use-toast";
 
 const AddTaskModal = () => {
   const supabase = createClient();
   const { user } = useAuth();
+  const { toast } = useToast();
+
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +27,9 @@ const AddTaskModal = () => {
 
     // Validate user input
     if (!titleRef?.current?.value.trim() || !textRef?.current?.value.trim()) {
-      toast.warn("Please provide all task details", {
-        pauseOnHover: false,
+      toast({
+        title: "Uh oh! Something went wrong",
+        description: "Please provide all task details",          
       });
       return;
     }
@@ -53,9 +56,11 @@ const AddTaskModal = () => {
      //Check if team member wants to create task
      const data = await getTeamData(user);
      if (user?.id !==  data?.admin_id) {
-       toast.warn("Admins only: Task creation restricted.", {
-         pauseOnHover: false,
-       });
+       toast({
+        variant: "destructive",
+        title: "Uh oh! Unauthorized!",
+        description: "Admins only: Task creation restricted",          
+      });
        setLoading(false);
        return;
      }
@@ -86,15 +91,18 @@ const AddTaskModal = () => {
         dispatch(setActionTriggered(false));
         dispatch(toggleModal());
         // Toast Notification
-        toast.success("New task created successfully", {
-          pauseOnHover: false,
+        toast({
+          variant: "success",
+          description: "New task created successfully",          
         });
         setLoading(false);
       }
     } catch (error) {
       setLoading(false);
-      toast.error("Error creating task", {
-        pauseOnHover: false,
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong",
+        description: "Error creating task",          
       });
     }
   }

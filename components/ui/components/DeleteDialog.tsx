@@ -12,11 +12,13 @@ import { Dispatch, SetStateAction } from "react";
 interface DeleteDialogProps {
   isAlertModalOpen: boolean;
   setIsAlertModalOpen: Dispatch<SetStateAction<boolean>>;
-  deleteAction?: () => void;
+  deleteAction: (id: string) => void;
   actionTakenOn: string;
+  id?: string;
 }
 
 const DeleteDialog = ({
+  id,
   isAlertModalOpen,
   setIsAlertModalOpen,
   deleteAction,
@@ -36,7 +38,10 @@ const DeleteDialog = ({
           <AlertDialogAction onClick={() => setIsAlertModalOpen(false)}>
             Cancel
           </AlertDialogAction>
-          <AlertDialogAction onClick={deleteAction} className="bg-red-600">
+          <AlertDialogAction
+            onClick={() => deleteAction(id as string)}
+            className="bg-red-600"
+          >
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

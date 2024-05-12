@@ -1,14 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
-import { toast } from "react-toastify";
 import { inviteMember } from "@/serverActions/inviteAction";
 import { getTeamData } from "@/hooks/getTeamData";
+import { useToast } from "./ui/use-toast";
 
 const InviteForm = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { toast } = useToast();
  
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -18,8 +19,10 @@ const InviteForm = () => {
     // Admin should only have the invitation privilege
     const data = await getTeamData(user);
     if (user?.id !==  data?.admin_id) {
-      toast.warn("Member invites by admin only", {
-        pauseOnHover: false,
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Unauthorized!",
+        description: "Member invites by admin only",          
       });
       setLoading(false);
       return;
@@ -29,13 +32,16 @@ const InviteForm = () => {
       await inviteMember(email, user?.id as string);
       setLoading(false);
       setEmail("");
-      toast.success("Invitation sent", {
-        pauseOnHover: false,
+      toast({
+        variant: "success",
+        description: "Invitation sent",          
       });
     } catch (error) {
       setLoading(false);
-      toast.error("Invitation failed", {
-        pauseOnHover: false,
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong",
+        description: "Invitation failed",          
       });
       console.error(error);
     }

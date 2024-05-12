@@ -1,8 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import ReduxProvider from "@/providers/ReduxProvider";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
-import "react-toastify/dist/ReactToastify.css";
 
 
 const defaultUrl = process.env.VERCEL_URL
@@ -27,8 +26,8 @@ export default function RootLayout({
         <ReduxProvider>
         {children}
         </ReduxProvider>
-        <ToastContainer/>
         </main>
+        <Toaster/>
       </body>
     </html>
   );
