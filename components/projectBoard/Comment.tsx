@@ -20,15 +20,13 @@ type commentProps = {
   setTaskDetails: Dispatch<SetStateAction<taskDataObj>>;
 };
 
-const Comment = ({
-  comment,
-  setTaskDetails,
-}: commentProps) => {
+const Comment = ({ comment, setTaskDetails }: commentProps) => {
   const supabase = createClient();
   const { user } = useAuth();
   const { toast } = useToast();
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const tasksData = useTypedSelector((store) => store.tasks.tasks);
 
   const selectedTask: taskDataObj = useTypedSelector(
     (store) => store.tasks.selectedTask
@@ -50,13 +48,23 @@ const Comment = ({
       );
 
       //Update database with filtered comments
-      const { data, error } = await supabase
+      const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
         .from("teams")
         .update({ tasks: updatedTasks })
         .eq("admin_id", user?.id as string)
         .select();
 
-      if (data) {
+      const { data: updatedTaskMember, error: updateErrorMember } =
+        await supabase
+          .from("teams")
+          .update({ tasks: updatedTasks })
+          .contains("team_member @>", '["' + user?.id + '"]')
+          .select();
+
+      // Combine the results
+      const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
+
+      if (updatedTask && updatedTask?.length > 0) {
         setShowDeleteCommentModal(false);
         setTaskDetails(newEditedTaskData[0]);
         toast({
@@ -102,13 +110,23 @@ const Comment = ({
         (task) => task.task_id === selectedTask.task_id
       );
       //Update database with edited comment
-      const { data, error } = await supabase
+      const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
         .from("teams")
         .update({ tasks: updatedTasks })
         .eq("admin_id", user?.id as string)
         .select();
 
-      if (data) {
+        const { data: updatedTaskMember, error: updateErrorMember } =
+        await supabase
+          .from("teams")
+          .update({ tasks: updatedTasks })
+          .contains("team_member @>", '["' + user?.id + '"]')
+          .select();
+
+      // Combine the results
+      const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
+
+      if (updatedTask && updatedTask?.length > 0) {
         setTaskDetails(newEditedTaskData[0]);
         setShowEditModal(false);
         toast({

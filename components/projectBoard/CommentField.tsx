@@ -34,7 +34,7 @@ const CommentField = ({
     (store) => store.tasks.selectedTask
   );
 
-  async function addComment(e: React.FormEvent<HTMLFormElement>) {
+  async function addComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
@@ -96,7 +96,7 @@ const CommentField = ({
     <form onSubmit={addComment} className="relative w-full mt-2 grid gap-y-2">
       <textarea
         rows={1}
-        placeholder={`Comment as ${user?.email}...`}
+        placeholder="Add a comment..."
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
         className=" border border-primColor rounded-tl-none resize-none text-sm text-secColor placeholder:text-secColor w-full rounded-md py-3 px-2"
