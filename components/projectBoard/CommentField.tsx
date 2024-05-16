@@ -11,7 +11,6 @@ import { useToast } from "../ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
 
 type commentFieldProps = {
-  setTaskDetails: Dispatch<SetStateAction<taskDataObj>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   commentText: string;
   setCommentText: Dispatch<SetStateAction<string>>;
@@ -20,7 +19,6 @@ type commentFieldProps = {
 };
 
 const CommentField = ({
-  setTaskDetails,
   setLoading,
   commentText,
   setCommentText,
@@ -73,7 +71,6 @@ const CommentField = ({
     const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
 
     if (updatedTask && updatedTask?.length > 0 && targetObject) {
-      setTaskDetails(targetObject);
       setCommentText("");
       dispatch(setActionTriggered(false));
       setLoading(false);

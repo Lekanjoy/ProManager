@@ -6,7 +6,7 @@ import member1 from "@/public/assets/member1.svg";
 import member2 from "@/public/assets/member2.svg";
 import { taskDataObj } from "@/types";
 
-const TaskStats = ({ taskDetails }: { taskDetails: taskDataObj }) => {
+const TaskStats = ({ currentTask }: { currentTask: taskDataObj }) => {
   return (
     <div className="flex items-center gap-x-6">
       <div className="flex">
@@ -17,15 +17,15 @@ const TaskStats = ({ taskDetails }: { taskDetails: taskDataObj }) => {
       <div className="flex gap-x-1 items-center text-xs">
         <Image src={comment} alt="Comment Icon" />
         <p>
-          {taskDetails.comments.length} comment
-          {taskDetails.comments.length > 1 && "s"}
+          {currentTask?.comments.length} comment
+          {currentTask?.comments.length > 1 && "s"}
         </p>
       </div>
       <div className="flex gap-x-1 items-center text-xs">
         <Image src={file} alt="files Icon" />
         <p>
-          {taskDetails.files.length} file
-          {taskDetails.files.length > 1 && "s"}
+          {currentTask?.files.length} file
+          {currentTask?.files.length > 1 && "s"}
         </p>
       </div>
     </div>

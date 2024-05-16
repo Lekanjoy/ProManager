@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { getTeamData } from "@/hooks/getTeamData";
 import { useAuth } from "@/hooks/UseAuth";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
-import { taskDataObj } from "../../types";
+import { taskDataObj, teamData } from "../../types";
 import { Trash2 } from "lucide-react";
 import DeleteDialog from "../ui/components/DeleteDialog";
 import Comment from "./Comment";
@@ -22,10 +22,39 @@ const TaskCardDetails = () => {
   const selectedTask: taskDataObj = useTypedSelector(
     (store) => store.tasks.selectedTask
   );
-  const [taskDetails, setTaskDetails] = useState(selectedTask);
   const [loading, setLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const tasksData: teamData[] = useTypedSelector((store) => store.tasks.tasks);
+  const [tasks, setTasks] = useState<taskDataObj[] | null>(null);
 
+  // Make tasks available locally after fetching
+  useEffect(() => {
+    setTasks(tasksData[0]?.tasks);
+  }, [tasksData]);
+
+  // Subscribe to all realtime events change in datbase
+  useEffect(() => {
+    const supabase = createClient();
+    const teams = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "teams" },
+        (payload) => {
+          const newTasks = (payload.new as { tasks: taskDataObj[] }).tasks;
+          setTasks(newTasks);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      teams.unsubscribe();
+    };
+  }, []);
+
+  const currentTask = tasks?.find(
+    (task) => task.task_id === selectedTask.task_id
+  ) as taskDataObj;
 
   async function deleteTask() {
     // Admin should only have the task deletion privilege
@@ -70,9 +99,9 @@ const TaskCardDetails = () => {
   }
 
   const priorityStyle =
-    taskDetails.priority === "High"
+    currentTask?.priority === "High"
       ? "bg-red-500"
-      : taskDetails.priority === "Medium"
+      : currentTask?.priority === "Medium"
       ? "bg-yellow-300"
       : "bg-gray-500";
 
@@ -85,7 +114,7 @@ const TaskCardDetails = () => {
               className={`py-1 px-[6px] w-fit rounded text-white text-xs font-medium ${priorityStyle}
             `}
             >
-              {taskDetails.priority}
+              {currentTask?.priority}
             </p>
             <div
               onClick={() => setIsDeleteModalOpen(true)}
@@ -96,24 +125,17 @@ const TaskCardDetails = () => {
           </div>
           <div className=" my-2">
             <h1 className="text-foreground font-semibold mb-[6px] text-3xl ">
-              {taskDetails.title}
+              {currentTask?.title}
             </h1>
-            <p className="text-xs">{taskDetails.description}</p>
+            <p className="text-xs">{currentTask?.description}</p>
           </div>
-          <TaskStats taskDetails={taskDetails} />
+          <TaskStats currentTask={currentTask} />
           {/* List out all comments */}
-          {taskDetails.comments?.map((comment) => {
-            return (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                setTaskDetails={setTaskDetails}
-              />
-            );
+          {currentTask?.comments?.map((comment) => {
+            return <Comment key={comment.id} comment={comment} />;
           })}
           {/* Comment input field */}
           <CommentField
-            setTaskDetails={setTaskDetails}
             setLoading={setLoading}
             commentText={commentText}
             setCommentText={setCommentText}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import CommentActions from "../ui/components/CommentActions";
 import member from "@/public/assets/member.svg";
 import { useAuth } from "@/hooks/UseAuth";
@@ -8,8 +8,6 @@ import DeleteDialog from "../ui/components/DeleteDialog";
 import { getTeamData } from "@/hooks/getTeamData";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "../ui/use-toast";
-import { taskDataObj } from "@/types";
-import { useTypedSelector } from "@/store/store";
 
 type commentProps = {
   comment: {
@@ -17,20 +15,14 @@ type commentProps = {
     text: string;
     author: string;
   };
-  setTaskDetails: Dispatch<SetStateAction<taskDataObj>>;
 };
 
-const Comment = ({ comment, setTaskDetails }: commentProps) => {
+const Comment = ({ comment }: commentProps) => {
   const supabase = createClient();
   const { user } = useAuth();
   const { toast } = useToast();
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const tasksData = useTypedSelector((store) => store.tasks.tasks);
-
-  const selectedTask: taskDataObj = useTypedSelector(
-    (store) => store.tasks.selectedTask
-  );
   const { id, text, author } = comment;
 
   async function deleteComment(id: string) {
@@ -42,10 +34,6 @@ const Comment = ({ comment, setTaskDetails }: commentProps) => {
         const comments = task.comments.filter((comment) => comment.id !== id);
         return { ...task, comments }; // Create a new task object with filtered comments
       });
-
-      const newEditedTaskData = updatedTasks.filter(
-        (task) => task.task_id === selectedTask.task_id
-      );
 
       //Update database with filtered comments
       const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
@@ -66,7 +54,6 @@ const Comment = ({ comment, setTaskDetails }: commentProps) => {
 
       if (updatedTask && updatedTask?.length > 0) {
         setShowDeleteCommentModal(false);
-        setTaskDetails(newEditedTaskData[0]);
         toast({
           variant: "success",
           description: "Comment Deleted",
@@ -106,9 +93,6 @@ const Comment = ({ comment, setTaskDetails }: commentProps) => {
         return { ...task, comments: updatedComments };
       });
 
-      const newEditedTaskData = updatedTasks.filter(
-        (task) => task.task_id === selectedTask.task_id
-      );
       //Update database with edited comment
       const { data: updatedTaskAdmin, error: updateErrorAdmin } = await supabase
         .from("teams")
@@ -127,7 +111,6 @@ const Comment = ({ comment, setTaskDetails }: commentProps) => {
       const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
 
       if (updatedTask && updatedTask?.length > 0) {
-        setTaskDetails(newEditedTaskData[0]);
         setShowEditModal(false);
         toast({
           variant: "success",
@@ -152,7 +135,7 @@ const Comment = ({ comment, setTaskDetails }: commentProps) => {
           <p className="font-bold text-secColor text-xs">{author}</p>
         </div>
         {/* Show comment actions only if current user is the author */}
-        {author === user?.email && (
+        { user?.email === author && (
           <div className="mr-4">
             <CommentActions
               setShowDeleteCommentModal={setShowDeleteCommentModal}
