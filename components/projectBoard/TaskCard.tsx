@@ -5,13 +5,13 @@ import { toggleModal } from "../../features/taskDetailsModalSlice";
 import { selectTask } from "../../features/addNewTaskSlice";
 import { useAppDispatch } from "../../store/store";
 import { taskDataObj } from "@/types";
+import { GripIcon } from "lucide-react";
 import Image from "next/image";
 import comment from "@/public/assets/comments.svg";
 import file from "@/public/assets/folder-2.svg";
 import member from "@/public/assets/member.svg";
 import member1 from "@/public/assets/member1.svg";
 import member2 from "@/public/assets/member2.svg";
-import { GripIcon } from "lucide-react";
 
 interface ITaskCardProps {
   task: taskDataObj;
@@ -74,7 +74,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
         >
           {priority}
         </p>
-        <GripIcon size={20}/>
+        <GripIcon size={16}/>
       </div>
       <div onClick={viewTaskDetails} className="cursor-pointer">
         <div className=" mb-8">

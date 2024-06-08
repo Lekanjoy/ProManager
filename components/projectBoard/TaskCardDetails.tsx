@@ -12,6 +12,7 @@ import Comment from "./Comment";
 import CommentField from "./CommentField";
 import TaskStats from "./TaskStats";
 import { useToast } from "../ui/use-toast";
+import { setActionTriggered } from "@/features/isActionTriggeredSlice";
 
 const TaskCardDetails = () => {
   const supabase = createClient();
@@ -67,6 +68,7 @@ const TaskCardDetails = () => {
       });
       return;
     }
+    dispatch(setActionTriggered(true));
 
     // Delete selected Task
     const existingDataFromDatabase = teamData?.tasks;
@@ -82,6 +84,7 @@ const TaskCardDetails = () => {
       .select();
 
     if (data) {
+      dispatch(setActionTriggered(false));
       setIsDeleteModalOpen(false);
       dispatch(toggleModal());
       toast({
@@ -89,6 +92,7 @@ const TaskCardDetails = () => {
         description: "Task Deleted",
       });
     } else {
+      dispatch(setActionTriggered(false));
       console.error("Error deleting task");
       toast({
         variant: "destructive",

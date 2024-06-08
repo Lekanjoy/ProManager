@@ -8,6 +8,8 @@ import DeleteDialog from "../ui/components/DeleteDialog";
 import { getTeamData } from "@/hooks/getTeamData";
 import { createClient } from "@/utils/supabase/client";
 import { useToast } from "../ui/use-toast";
+import { setActionTriggered } from "@/features/isActionTriggeredSlice";
+import { useAppDispatch } from "@/store/store";
 
 type commentProps = {
   comment: {
@@ -21,11 +23,15 @@ const Comment = ({ comment }: commentProps) => {
   const supabase = createClient();
   const { user } = useAuth();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const { id, text, author } = comment;
 
   async function deleteComment(id: string) {
+    dispatch(setActionTriggered(true));
+
     // Delete selected Comment
     const teamData = await getTeamData(user);
 
@@ -53,12 +59,14 @@ const Comment = ({ comment }: commentProps) => {
       const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
 
       if (updatedTask && updatedTask?.length > 0) {
+        dispatch(setActionTriggered(false));
         setShowDeleteCommentModal(false);
         toast({
           variant: "success",
           description: "Comment Deleted",
         });
       } else {
+        dispatch(setActionTriggered(false));
         console.error("Error deleting comment");
         toast({
           variant: "destructive",
@@ -79,6 +87,9 @@ const Comment = ({ comment }: commentProps) => {
       });
       return;
     }
+
+    dispatch(setActionTriggered(true));
+
     const teamData = await getTeamData(user);
     // Update selected comment
     if (teamData && teamData.tasks) {
@@ -100,7 +111,7 @@ const Comment = ({ comment }: commentProps) => {
         .eq("admin_id", user?.id as string)
         .select();
 
-        const { data: updatedTaskMember, error: updateErrorMember } =
+      const { data: updatedTaskMember, error: updateErrorMember } =
         await supabase
           .from("teams")
           .update({ tasks: updatedTasks })
@@ -111,12 +122,14 @@ const Comment = ({ comment }: commentProps) => {
       const updatedTask = updatedTaskAdmin?.concat(updatedTaskMember ?? []);
 
       if (updatedTask && updatedTask?.length > 0) {
+        dispatch(setActionTriggered(false));
         setShowEditModal(false);
         toast({
           variant: "success",
           description: "Comment Edited",
         });
       } else {
+        dispatch(setActionTriggered(false));
         console.error("Error editing comment");
         toast({
           variant: "destructive",
@@ -135,7 +148,7 @@ const Comment = ({ comment }: commentProps) => {
           <p className="font-bold text-secColor text-xs">{author}</p>
         </div>
         {/* Show comment actions only if current user is the author */}
-        { user?.email === author && (
+        {user?.email === author && (
           <div className="mr-4">
             <CommentActions
               setShowDeleteCommentModal={setShowDeleteCommentModal}

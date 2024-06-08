@@ -22,9 +22,60 @@ export function onDragStart(
   }
 }
 
+// export function onDragEnd(
+//   event: DragEndEvent,
+//   setActiveTask: Dispatch<SetStateAction<null>>,
+//   setTasks: Dispatch<SetStateAction<taskDataObj[] | null>>,
+//   setColumns: Dispatch<SetStateAction<ColumnDataType[]>>
+// ) {
+//   setActiveTask(null);
+
+//   const { active, over } = event;
+//   if (!over) return;
+
+//   const activeId = active.id;
+//   const overId = over.id;
+
+//   if (activeId === overId) return;
+
+//   const isActiveAColumn = active.data.current?.type === "Column";
+//   if (!isActiveAColumn) return;
+
+//   setColumns((columns) => {
+//     const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+
+//     const overColumnIndex = columns.findIndex((col) => col.id === overId);
+
+//     return arrayMove(columns, activeColumnIndex, overColumnIndex);
+//   });
+
+//   const isOverAColumn = over.data.current?.type === "Column";
+//   const isActiveATask = active.data.current?.type === "Task";
+//   // Im dropping a Task over a column
+//   if (isActiveATask && isOverAColumn) {
+//     setTasks((tasks) => {
+//       if (tasks === undefined || tasks === null) return null; // Return null if tasks is undefined or null
+
+//       const activeIndex = tasks.findIndex((t) => t.task_id === activeId);
+//       if (activeIndex === -1) return tasks; // Return the original array if activeId is not found
+
+//       const newTasks = [...tasks]; // Create a new array using the spread operator
+//       newTasks[activeIndex] = { ...tasks[activeIndex], columnId: overId };
+
+//       console.log(newTasks);
+    
+    
+//     })}
+
+
+
+// }
+
+
 export function onDragEnd(
   event: DragEndEvent,
   setActiveTask: Dispatch<SetStateAction<null>>,
+  setTasks: Dispatch<SetStateAction<taskDataObj[] | null>>,
   setColumns: Dispatch<SetStateAction<ColumnDataType[]>>
 ) {
   setActiveTask(null);
@@ -38,16 +89,39 @@ export function onDragEnd(
   if (activeId === overId) return;
 
   const isActiveAColumn = active.data.current?.type === "Column";
-  if (!isActiveAColumn) return;
+  if (isActiveAColumn) {
+    setColumns((columns) => {
+      const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+      const overColumnIndex = columns.findIndex((col) => col.id === overId);
 
-  setColumns((columns) => {
-    const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+      const updatedColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
+      console.log('Updated Columns:', updatedColumns); // Log updated columns
+      return updatedColumns;
+    });
+  }
 
-    const overColumnIndex = columns.findIndex((col) => col.id === overId);
+  const isOverAColumn = over.data.current?.type === "Column";
+  const isActiveATask = active.data.current?.type === "Task";
+  
+  // Im dropping a Task over a column
+  if (isActiveATask && isOverAColumn) {
+    setTasks((tasks) => {
+      if (tasks === undefined || tasks === null) return null; // Return null if tasks is undefined or null
 
-    return arrayMove(columns, activeColumnIndex, overColumnIndex);
-  });
+      const activeIndex = tasks.findIndex((t) => t.task_id === activeId);
+      if (activeIndex === -1) return tasks; // Return the original array if activeId is not found
+
+      const newTasks = [...tasks]; // Create a new array using the spread operator
+      newTasks[activeIndex] = { ...tasks[activeIndex], columnId: overId };
+
+      // console.log('Updated Tasks:', newTasks); // Log updated tasks
+      return newTasks; // Return the new state
+    });
+  }
 }
+
+
+
 
 export function onDragOver(
   event: DragOverEvent,
@@ -103,30 +177,33 @@ export function onDragOver(
       const newTasks = [...tasks]; // Create a new array using the spread operator
       newTasks[activeIndex] = { ...tasks[activeIndex], columnId: overId };
 
+      // console.log(newTasks);
+      
+
       // Select matching team  and update current task status in database by Admin/Member after 10s
-      setTimeout(async () => {
-        const supabase = createClient();
-        try {
-          const { data: adminUpdate, error: adminError } = await supabase
-            .from("teams")
-            .update({ tasks: newTasks })
-            .eq("admin_id", user?.id as string) 
-            .select();
+      // setTimeout(async () => {
+      //   const supabase = createClient();
+      //   try {
+      //     const { data: adminUpdate, error: adminError } = await supabase
+      //       .from("teams")
+      //       .update({ tasks: newTasks })
+      //       .eq("admin_id", user?.id as string) 
+      //       .select();
 
-            const { data: memberUpdate, error: memberError } = await supabase
-            .from("teams")
-            .update({ tasks: newTasks })
-            .contains('team_member @>', '["' + user?.id + '"]')
-            .select();
+      //       const { data: memberUpdate, error: memberError } = await supabase
+      //       .from("teams")
+      //       .update({ tasks: newTasks })
+      //       .contains('team_member @>', '["' + user?.id + '"]')
+      //       .select();
 
-            if(adminError && memberError) {
-              alert('Failed to update task')
-            }
+      //       if(adminError && memberError) {
+      //         alert('Failed to update task')
+      //       }
             
-        } catch (error) {
-          console.log(error);
-        }
-      }, 10000);
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // }, 10000);
       
       return arrayMove(newTasks, activeIndex, activeIndex) || tasks; // Return the updated array or the original array if arrayMove returns falsy
     });

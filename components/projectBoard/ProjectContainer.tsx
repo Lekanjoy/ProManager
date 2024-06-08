@@ -86,6 +86,13 @@ const ProjectContainer = () => {
     setTasks(tasksData[0]?.tasks);
   }, [tasksData]);
 
+  useEffect(() => {
+    if (tasks !== null) {
+      // setTimeout(() => {
+        console.log('Updated Tasks:', tasks);        
+      // }, 10000);
+    }
+  }, [tasks]);
 
   // Filter tasks based on priority and/or date
   const dateString = date?.toLocaleDateString();
@@ -114,6 +121,7 @@ const ProjectContainer = () => {
 
   const tasksToDisplay = filteredTasks ?? tasks;
 
+  // Reset Tasks
   const resetTasks = () => {
     setTasks(tasksData[0]?.tasks);
     setFilteredTasks(null);
@@ -137,7 +145,7 @@ const ProjectContainer = () => {
             onDragStart(event, setActiveTask)
           }
           onDragEnd={(event: DragEndEvent) =>
-            onDragEnd(event, setActiveTask, setColumns)
+            onDragEnd(event, setActiveTask, setTasks, setColumns)
           }
           onDragOver={(event: DragOverEvent) =>
             onDragOver(event, setTasks, user)

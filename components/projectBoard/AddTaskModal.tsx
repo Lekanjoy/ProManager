@@ -13,8 +13,8 @@ const AddTaskModal = () => {
   const supabase = createClient();
   const { user } = useAuth();
   const { toast } = useToast();
-
   const dispatch = useAppDispatch();
+  
   const [loading, setLoading] = useState(false);
 
   const titleRef = useRef<HTMLInputElement | null>(null);

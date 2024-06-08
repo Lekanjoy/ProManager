@@ -12,7 +12,7 @@ const InviteForm = () => {
   const { toast } = useToast();
  
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function sendMemberInvitation(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
@@ -49,7 +49,7 @@ const InviteForm = () => {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={sendMemberInvitation}
       className="w-4/5 flex flex-col gap-y-4 px-4 py-8 bg-background border shadow rounded lg:w-[500px]"
     >
       <h2 className=" text-xl font-semibold mb-4">Invite a team member</h2>

@@ -7,7 +7,6 @@ export default async function SetPassword({
 }: {
   searchParams: { message: string }
 }) {
-
   const supabase = createClient()
 
   const { data: { user }, } = await supabase.auth.getUser()
@@ -16,14 +15,12 @@ export default async function SetPassword({
     'use server'
 
     const password = formData.get('password') as string
-    const supabase = createClient()
-
     const { error } = await supabase.auth.updateUser({
       password,
     })
 
     if (error) {
-      return redirect('/set-password?message=Could not update user password')
+      return redirect(`/set-password?message=${error.message}`)
     }
 
     return redirect('/dashboard')

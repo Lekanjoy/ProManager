@@ -4,12 +4,16 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "../login/submit-button";
 import { taskDataObj } from "@/types";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Signup({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
+  const supabase = createClient();
+  const { toast } = useToast();
+
   const signUp = async (formData: FormData) => {
     "use server";
 
@@ -18,8 +22,6 @@ export default function Signup({
     const password = formData.get("password") as string;
     const team_name = formData.get("team_name") as string;
     const description = formData.get("desc") as string;
-    const supabase = createClient();
-
     const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
@@ -45,8 +47,16 @@ export default function Signup({
       .from("teams")
       .insert([initialTeamData])
       .select();
-    if (signUpData && newTeamData)
-      return redirect("/login?message=Check your email to continue sign in process");
+    if (signUpData && newTeamData) {
+      toast({
+        variant: "success",
+        title: "Team Created!",
+        description: "Check your email to continue sign in process",
+      });
+      return redirect(
+        "/login?message=Check your email to continue sign in process"
+      );
+    }
   };
 
   return (
