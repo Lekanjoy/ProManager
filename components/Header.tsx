@@ -12,6 +12,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import UseCloseOnOutsideClick from "@/hooks/UseCloseOnOutsideClick";
 import { BellRing, MessageCircleQuestion } from "lucide-react";
+import Link from "next/link";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -34,12 +35,12 @@ const Header = () => {
   return (
     <header className="w-full flex px-6 py-[22px] border-b border-[#DBDBDB] items-center justify-between gap-x-10">
       <div className="flex justify-between gap-x-11 items-center">
-        <div className="flex gap-x-2 items-center">
+        <Link href={'/'} className="flex gap-x-2 items-center">
           <Image src={logo} alt="Logo" />
           <p className="text-xxl text-[#0D062D] font-semibold lg:text-2xl">
             ProManager
           </p>
-        </div>
+        </Link>
         <Image
           src={collapse}
           alt="collapse icon"

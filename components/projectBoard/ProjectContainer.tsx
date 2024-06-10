@@ -16,14 +16,14 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
 import {
   customCollisionDetectionAlgorithm,
-  onDragEnd,
   onDragOver,
   onDragStart,
 } from "@/utils/dnd-kit/funct";
 import { createPortal } from "react-dom";
-import TaskCard from "./TaskCard";
 import { createClient } from "@/utils/supabase/client";
+import TaskCard from "./TaskCard";
 import ProjectHeaders from "../ProjectHeaders";
+
 
 const defaultCols: ColumnDataType[] = [
   {
@@ -86,14 +86,6 @@ const ProjectContainer = () => {
     setTasks(tasksData[0]?.tasks);
   }, [tasksData]);
 
-  useEffect(() => {
-    if (tasks !== null) {
-      // setTimeout(() => {
-        console.log('Updated Tasks:', tasks);        
-      // }, 10000);
-    }
-  }, [tasks]);
-
   // Filter tasks based on priority and/or date
   const dateString = date?.toLocaleDateString();
   useEffect(() => {
@@ -129,6 +121,37 @@ const ProjectContainer = () => {
     setDate(undefined);
   };
 
+  // Update Database after Task Reorder
+  const [isTaskDropped, setIsTaskDropped] = useState(false);
+  useEffect(() => {
+    if (isTaskDropped) {
+      // Select matching team  and update current task status in database by Admin/Member after 10s
+      setTimeout(async () => {
+        const supabase = createClient();
+        try {
+          const { data: adminUpdate, error: adminError } = await supabase
+            .from("teams")
+            .update({ tasks })
+            .eq("admin_id", user?.id as string)
+            .select();
+
+          const { data: memberUpdate, error: memberError } = await supabase
+            .from("teams")
+            .update({ tasks })
+            .contains("team_member @>", '["' + user?.id + '"]')
+            .select();
+
+          if (adminError && memberError) {
+            alert("Failed to update task");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }, 5000);
+      setIsTaskDropped(false); // Reset the flag after updating database
+    }
+  }, [isTaskDropped, tasks]);
+
   return (
     <>
       <ProjectHeaders
@@ -144,12 +167,12 @@ const ProjectContainer = () => {
           onDragStart={(event: DragStartEvent) =>
             onDragStart(event, setActiveTask)
           }
-          onDragEnd={(event: DragEndEvent) =>
-            onDragEnd(event, setActiveTask, setTasks, setColumns)
-          }
           onDragOver={(event: DragOverEvent) =>
-            onDragOver(event, setTasks, user)
+            onDragOver(event, setTasks)
           }
+          onDragEnd={(event: DragEndEvent) => {
+            setIsTaskDropped(true);
+          }}
           collisionDetection={customCollisionDetectionAlgorithm}
         >
           {columns.map((col) => {
