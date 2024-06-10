@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import AuthButton from "../components/AuthButton";
-import heroBg from "@/public/assets/Design.png";
+import heroBg from "@/public/assets/Design 2.png";
 import logo from "@/public/assets/colorfilter.svg";
 import Vector from "@/public/assets/Vector.png";
 
