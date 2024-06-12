@@ -7,13 +7,20 @@ export default async function SetPassword({
 }: {
   searchParams: { message: string }
 }) {
-  const supabase = createClient()
+  
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const { data: { user }, } = await supabase.auth.getUser()
-
+  if (!user) {
+    return redirect("/login");
+  }
+  
   const setPassword = async (formData: FormData) => {
     'use server'
-
+    
+    const supabase = createClient()
     const password = formData.get('password') as string
     const { error } = await supabase.auth.updateUser({
       password,

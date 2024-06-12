@@ -19,7 +19,7 @@ export default function HomePage() {
       </nav>
       <div className="w-full px-3 mt-10 flex flex-col gap-y-8 items-center h-[90vh] md:px-5 md:flex-row md:mt-0 lg:px-12 lg:flex-row">
         <div className="w-full flex flex-col gap-y-3 lg:w-1/2">
-          <h1 className="font-semibold leading-[1.4] text-[30px] md:text-[36px] lg:text-[40px] xl:text-[48px] ">
+          <h1 className="font-semibold leading-[1.4] text-[30px] md:text-[36px] lg:text-[40px] xl:text-[48px]">
             Manage your{" "}
             <span className="relative">
               Team <Image src={Vector} alt="vector" className="absolute top-0 right-0"/>

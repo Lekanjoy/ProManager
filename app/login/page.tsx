@@ -8,7 +8,6 @@ export default function Login({
 }: {
   searchParams: { message: string };
 }) {
-  
   const signIn = async (formData: FormData) => {
     "use server";
     const supabase = createClient();
@@ -30,7 +29,7 @@ export default function Login({
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+      <form className="animate-in flex-1 flex flex-col w-full justify-center text-foreground">
         <h1 className="mb-10 text-bold text-2xl lg:text-3xl">
           Access Team Dashboard
         </h1>
@@ -48,12 +47,18 @@ export default function Login({
           Password
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          className="rounded-md px-4 py-2 bg-inherit border mb-1"
           type="password"
           name="password"
           placeholder="••••••••"
           required
         />
+        <Link
+          href={"/forgot-password"}
+          className="text-right mb-6 text-sm italic font-light"
+        >
+          Forgot password?
+        </Link>
         <SubmitButton
           formAction={signIn}
           className="bg-green-700 rounded-md text-white px-4 py-2 text-foreground mb-2"
