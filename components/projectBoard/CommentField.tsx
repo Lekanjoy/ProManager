@@ -1,12 +1,17 @@
 "use client";
-
 import { setActionTriggered } from "@/features/isActionTriggeredSlice";
 import { generateCommentId } from "@/hooks/generateId";
 import { getTeamData } from "@/hooks/getTeamData";
 import { useAppDispatch, useTypedSelector } from "@/store/store";
 import { taskDataObj } from "@/types";
 import { User } from "@supabase/supabase-js";
-import { Dispatch, FormEvent, SetStateAction } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { useToast } from "../ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
 
@@ -31,6 +36,44 @@ const CommentField = ({
   const selectedTask: taskDataObj = useTypedSelector(
     (store) => store.tasks.selectedTask
   );
+  const [authorName, setAuthorName] = useState(" ");
+
+
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!user) {
+        console.error("User is not authenticated");
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("userProfile")
+          .select("*")
+          .eq("userID", user.id);
+
+        if (error) {
+          throw error;
+        }
+
+        if (data && data.length > 0) {
+          setAuthorName(data[0].fullName);
+        } else {
+          console.error("Profile not found for user", user.id);
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Please set your profile",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    getProfile();
+  }, [user]);
+  
 
   async function addComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,7 +82,8 @@ const CommentField = ({
     const newCommentData = {
       id: generateCommentId(),
       text: commentText,
-      author: user?.email as string, //TODO: This should be display name after user has set it
+      author: authorName || (user?.email as string),
+      authorId: user?.id as string
     };
 
     dispatch(setActionTriggered(true));
@@ -88,6 +132,8 @@ const CommentField = ({
       });
     }
   }
+
+  // TODO: Make this component fixed
 
   return (
     <form onSubmit={addComment} className="relative w-full mt-2 grid gap-y-2">

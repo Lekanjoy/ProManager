@@ -23,6 +23,7 @@ export type taskDataObj = {
     id: string;
     text: string;
     author: string;
+    authorId: string;
   }[];
 };
 

@@ -16,6 +16,7 @@ type commentProps = {
     id: string;
     text: string;
     author: string;
+    authorId: string;
   };
 };
 
@@ -27,7 +28,7 @@ const Comment = ({ comment }: commentProps) => {
 
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const { id, text, author } = comment;
+  const { id, text, author, authorId } = comment;
 
   async function deleteComment(id: string) {
     dispatch(setActionTriggered(true));
@@ -148,7 +149,7 @@ const Comment = ({ comment }: commentProps) => {
           <p className="font-bold text-secColor text-xs">{author}</p>
         </div>
         {/* Show comment actions only if current user is the author */}
-        {user?.email === author && (
+        {user?.id === authorId && (
           <div className="mr-4">
             <CommentActions
               setShowDeleteCommentModal={setShowDeleteCommentModal}

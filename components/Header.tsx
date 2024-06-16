@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
 import { collapseAside } from "../features/asideCollapseSlice";
-import { useDispatch, useSelector } from "react-redux";
 import logo from "@/public/assets/colorfilter.svg";
 import collapse from "@/public/assets/collapse.svg";
 import search from "@/public/assets/search-normal.svg";
@@ -11,12 +10,12 @@ import { useAuth } from "@/hooks/UseAuth";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import UseCloseOnOutsideClick from "@/hooks/UseCloseOnOutsideClick";
-import { BellRing, MessageCircleQuestion } from "lucide-react";
 import Link from "next/link";
+import { useAppDispatch, useTypedSelector } from "@/store/store";
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const collapseState = useSelector((store: any) => store.collapse);
+  const dispatch = useAppDispatch();
+  const collapseState = useTypedSelector((store) => store.collapse);
   const { user } = useAuth();
   const [showUser, setShowUser] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -31,6 +30,8 @@ const Header = () => {
     setIsLoggingOut(false);
     return router.push("/login");
   };
+
+
 
   return (
     <header className="w-full flex px-6 py-[22px] border-b border-[#DBDBDB] items-center justify-between gap-x-10">
@@ -63,10 +64,9 @@ const Header = () => {
           className="absolute top-[13px] left-2"
         />
       </div>
-      <div className="flex gap-x-5 items-center">
+      <div className="flex gap-x-2 items-center lg:gap-x-5">
         <div className="flex gap-x-2 items-center text-primColor">
-        <MessageCircleQuestion size={21}/>
-        <BellRing size={21}/>
+          <Link href={"/members"} className="text-white px-3 py-[2px] bg-[#421bf1] rounded-md">Invite</Link>
         </div>
         <div className="relative flex items-center gap-x-2">
           <Image
