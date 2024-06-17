@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import UseCloseOnOutsideClick from "@/hooks/UseCloseOnOutsideClick";
 import Link from "next/link";
 import { useAppDispatch, useTypedSelector } from "@/store/store";
+import { InviteDialog } from "./ui/components/InviteDialog";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -66,7 +67,7 @@ const Header = () => {
       </div>
       <div className="flex gap-x-2 items-center lg:gap-x-5">
         <div className="flex gap-x-2 items-center text-primColor">
-          <Link href={"/members"} className="text-white px-3 py-[2px] bg-[#421bf1] rounded-md">Invite</Link>
+          <InviteDialog/>
         </div>
         <div className="relative flex items-center gap-x-2">
           <Image
