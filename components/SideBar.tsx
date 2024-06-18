@@ -53,7 +53,7 @@ const SideBar = () => {
 
   return (
     <aside
-      className={` bg-white hidden flex-col pl-[22px] pt-8 min-h-[85vh]  border-r border-[#DBDBDB] 
+      className={` bg-white hidden flex-col pl-[22px] mt-24 pt-[43px]  fixed z-10 min-h-[85vh]  border-r border-[#DBDBDB] 
           ${collapseStore ? "sidebar" : "sidebar-hidden"}
           lg:flex`}
     >

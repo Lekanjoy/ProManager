@@ -32,12 +32,10 @@ const Header = () => {
     return router.push("/login");
   };
 
-
-
   return (
-    <header className="w-full flex px-6 py-[22px] border-b border-[#DBDBDB] items-center justify-between gap-x-10">
+    <header className="w-full fixed z-50 bg-white left-0 top-0 flex px-6 py-[22px] shadow-md items-center justify-between gap-x-10">
       <div className="flex justify-between gap-x-11 items-center">
-        <Link href={'/'} className="flex gap-x-2 items-center">
+        <Link href={"/"} className="flex gap-x-2 items-center">
           <Image src={logo} alt="Logo" />
           <p className="text-xxl text-[#0D062D] font-semibold lg:text-2xl">
             ProManager
@@ -67,7 +65,7 @@ const Header = () => {
       </div>
       <div className="flex gap-x-2 items-center lg:gap-x-5">
         <div className="flex gap-x-2 items-center text-primColor">
-          <InviteDialog/>
+          <InviteDialog />
         </div>
         <div className="relative flex items-center gap-x-2">
           <Image
@@ -77,6 +75,10 @@ const Header = () => {
             onClick={() => setShowUser(!showUser)}
             ref={triggerRef}
           />
+          <span className="absolute right-0 top-0 flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+          </span>
           {showUser && (
             <UseCloseOnOutsideClick
               Ref={userProfileRef}

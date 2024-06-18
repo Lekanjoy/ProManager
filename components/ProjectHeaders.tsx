@@ -28,7 +28,7 @@ const ProjectHeaders = ({
   const triggerRef = useRef<SVGSVGElement>(null);
 
   return (
-    <section className="flex flex-col gap-y-10 py-10">
+    <section className="flex flex-col gap-y-10 py-10 mt-20">
       {loading ? (
         <Image unoptimized src={spinner} alt="Spinner" />
       ) : (

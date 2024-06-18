@@ -14,6 +14,8 @@ import {
 } from "react";
 import { useToast } from "../ui/use-toast";
 import { createClient } from "@/utils/supabase/client";
+import { ToastAction } from "../ui/toast";
+import Link from "next/link";
 
 type commentFieldProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -36,8 +38,7 @@ const CommentField = ({
   const selectedTask: taskDataObj = useTypedSelector(
     (store) => store.tasks.selectedTask
   );
-  const [authorName, setAuthorName] = useState(" ");
-
+  const [authorName, setAuthorName] = useState("");
 
   useEffect(() => {
     const getProfile = async () => {
@@ -64,6 +65,11 @@ const CommentField = ({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
             description: "Please set your profile",
+            action: (
+              <ToastAction altText="Settings">
+                <Link href="/settings">Settings</Link>
+              </ToastAction>
+            ),
           });
         }
       } catch (error) {
@@ -73,17 +79,17 @@ const CommentField = ({
 
     getProfile();
   }, [user]);
-  
 
   async function addComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
+    const author = authorName === "" ? (user?.email as string) : authorName;
     const newCommentData = {
       id: generateCommentId(),
       text: commentText,
-      author: authorName || (user?.email as string),
-      authorId: user?.id as string
+      author,
+      authorId: user?.id as string,
     };
 
     dispatch(setActionTriggered(true));
@@ -133,10 +139,9 @@ const CommentField = ({
     }
   }
 
-  // TODO: Make this component fixed
 
   return (
-    <form onSubmit={addComment} className="relative w-full mt-2 grid gap-y-2">
+    <form onSubmit={addComment} className="w-full mt-2 grid gap-y-2">
       <textarea
         rows={1}
         placeholder="Add a comment..."

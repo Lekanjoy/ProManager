@@ -1,18 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { createClient } from "@/utils/supabase/client";
 import { getTeamData } from "@/hooks/getTeamData";
 import { useAuth } from "@/hooks/UseAuth";
 import { toggleModal } from "../../features/taskDetailsModalSlice";
 import { useAppDispatch, useTypedSelector } from "../../store/store";
 import { taskDataObj, teamData } from "../../types";
-import { Trash2 } from "lucide-react";
 import DeleteDialog from "../ui/components/DeleteDialog";
-import Comment from "./Comment";
-import CommentField from "./CommentField";
-import TaskStats from "./TaskStats";
 import { useToast } from "../ui/use-toast";
 import { setActionTriggered } from "@/features/isActionTriggeredSlice";
+import CardDetails from "./CardDetails";
 
 const TaskCardDetails = () => {
   const supabase = createClient();
@@ -102,51 +99,19 @@ const TaskCardDetails = () => {
     }
   }
 
-  const priorityStyle =
-    currentTask?.priority === "High"
-      ? "bg-red-500"
-      : currentTask?.priority === "Medium"
-      ? "bg-yellow-300"
-      : "bg-gray-500";
 
   return (
     <>
       <section className="z-[50] bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center">
-        <div className="relative z-40 flex flex-col gap-y-3 bg-background shadow-md rounded-lg px-6 py-6  max-h-[420px] overflow-auto w-full lg:w-[500px]">
-          <div className="flex justify-between items-center">
-            <p
-              className={`py-1 px-[6px] w-fit rounded text-white text-xs font-medium ${priorityStyle}
-            `}
-            >
-              {currentTask?.priority}
-            </p>
-            <div
-              onClick={() => setIsDeleteModalOpen(true)}
-              className="flex p-2 rounded-full items-center justify-center bg-black/10 cursor-pointer hover:scale-125 duration-200 ease-in-out"
-            >
-              <Trash2 size={16} color="red" />
-            </div>
-          </div>
-          <div className=" my-2">
-            <h1 className="text-foreground font-semibold mb-[6px] text-3xl ">
-              {currentTask?.title}
-            </h1>
-            <p className="text-xs">{currentTask?.description}</p>
-          </div>
-          <TaskStats currentTask={currentTask} />
-          {/* List out all comments */}
-          {currentTask?.comments?.map((comment) => {
-            return <Comment key={comment.id} comment={comment} />;
-          })}
-          {/* Comment input field */}
-          <CommentField
-            setLoading={setLoading}
-            commentText={commentText}
-            setCommentText={setCommentText}
-            user={user}
-            loading={loading}
-          />
-        </div>
+      <CardDetails
+        currentTask={currentTask}
+        setIsDeleteModalOpen={setIsDeleteModalOpen}
+        setLoading={setLoading}
+        commentText={commentText}
+        setCommentText={setCommentText}
+        user={user}
+        loading={loading}
+      />
         {/* Close Modal */}
         <p
           onClick={() => dispatch(toggleModal())}

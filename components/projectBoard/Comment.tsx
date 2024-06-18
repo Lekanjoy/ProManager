@@ -141,15 +141,18 @@ const Comment = ({ comment }: commentProps) => {
     }
   }
 
+  // Check if current user is author
+  const isAuthor = user?.id === authorId;
+
   return (
-    <div className=" w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words">
+    <div className={` w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words  ${isAuthor ? 'border-l-4 border-l-[#00796b]' : ''}`}>
       <div className="w-full flex gap-x-1 justify-between items-center">
         <div className="flex gap-x-1 items-center">
           <Image src={member} alt="Team members avatar" />
           <p className="font-bold text-secColor text-xs">{author}</p>
         </div>
         {/* Show comment actions only if current user is the author */}
-        {user?.id === authorId && (
+        {isAuthor && (
           <div className="mr-4">
             <CommentActions
               setShowDeleteCommentModal={setShowDeleteCommentModal}
@@ -159,12 +162,12 @@ const Comment = ({ comment }: commentProps) => {
         )}
       </div>
       <p className="text-sm text-primColor pl-8">{text}</p>
-      <EditComment
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        comment={comment}
-        editComment={editComment}
-      />
+        <EditComment
+          showEditModal={showEditModal}
+          setShowEditModal={setShowEditModal}
+          comment={comment}
+          editComment={editComment}
+        />
       <DeleteDialog
         isAlertModalOpen={showDeleteCommentModal}
         setIsAlertModalOpen={setShowDeleteCommentModal}
