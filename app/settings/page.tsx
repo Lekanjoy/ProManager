@@ -11,19 +11,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/UseAuth";
 import { createClient } from "@/utils/supabase/client";
+import { useTypedSelector } from "@/store/store";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import SideBar from "@/components/SideBar";
 
 export default function SettingsPage() {
   const supabase = createClient();
   const { toast } = useToast();
   const { user } = useAuth();
+  const collapseStore = useTypedSelector((store) => store.collapse);
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("");
   const [isDataPresent, setIsDataPresent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
+  
   useEffect(() => {
     const getProfile = async () => {
       if (!user) {
@@ -145,8 +148,11 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center px-6 lg:px-20">
-      <Card className="w-full lg:w-2/4">
+    <div className={`w-full relative flex px-6 `}>
+      <div className="mt-10 p-0">
+     <SideBar/>
+      </div>
+      <Card className={` mt-32 ${collapseStore ? 'lg:w-[75%] lg:ml-[23%]  lg:ease-in-out lg:duration-1000' : 'w-full lg:pl-6 lg:ease-in-out lg:duration-1000'} xl:col-span-2`}>
         <CardHeader>
           <CardTitle>Update Profile</CardTitle>
           <CardDescription>

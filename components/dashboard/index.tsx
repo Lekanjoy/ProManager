@@ -1,6 +1,5 @@
 "use client";
 import { useTypedSelector } from "@/store/store";
-import Header from "../Header";
 import SideBar from "../SideBar";
 import AddTaskModal from "../projectBoard/AddTaskModal";
 import ProjectContainer from "../projectBoard/ProjectContainer";
@@ -51,7 +50,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <Header />
       <div className=" relative flex w-full ">
         <SideBar />
         <section className={`px-6 w-full mb-20 z-[1] ${collapseStore ? 'lg:pl-[20%] lg:ml-3 lg:ease-in-out lg:duration-1000' : 'lg:pl-6 lg:ease-in-out lg:duration-1000'}`}>

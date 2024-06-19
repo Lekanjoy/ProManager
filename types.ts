@@ -27,6 +27,13 @@ export type taskDataObj = {
   }[];
 };
 
+export type userProfileData = {
+  userID: string;
+  fullName: string;
+  email: string;
+  role: string;
+}
+
 export type ColumnDataType = {
   id: string | number,
   title: string
