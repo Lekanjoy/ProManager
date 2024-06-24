@@ -58,6 +58,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
 
   return (
     <div
+    data-testid="taskCard"
       ref={setNodeRef}
       style={style}
       className="w-full bg-white p-4 rounded-2xl text-primColor"

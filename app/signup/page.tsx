@@ -63,6 +63,7 @@ export default function Signup({
           Team Name
         </label>
         <input
+        id="team_name"
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           name="team_name"
           type="text"
@@ -73,6 +74,7 @@ export default function Signup({
           Description
         </label>
         <input
+        id="desc"
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           type="text"
           name="desc"
@@ -83,6 +85,7 @@ export default function Signup({
           Email
         </label>
         <input
+        id="email"
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           type="email"
           name="email"
@@ -93,6 +96,7 @@ export default function Signup({
           Password
         </label>
         <input
+        id="password"
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           type="password"
           name="password"

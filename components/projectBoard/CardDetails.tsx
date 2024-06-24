@@ -43,8 +43,9 @@ const CardDetails = ({
 
   return (
     <div
+      data-testid="cardDetails"
       ref={cardRef}
-      className="relative overflow-x-hidden flex flex-col gap-y-3 bg-white shadow-md rounded-lg px-6 py-6 max-h-[420px] overflow-auto w-full lg:w-[500px]"
+      className="z-[23] relative overflow-x-hidden flex flex-col gap-y-3 bg-white shadow-md rounded-lg px-6 py-6 max-h-[420px] overflow-auto w-full lg:w-[500px]"
     >
       <div className="sticky bg-white z-[5] w-full py-2 -top-[24px]  right-0">
         <div className="flex justify-between items-center">
@@ -71,7 +72,7 @@ const CardDetails = ({
       {currentTask?.comments?.map((comment) => (
         <Comment key={comment.id} comment={comment} />
       ))}
-     <div className=" w-full sticky bottom-0">
+      <div className=" w-full sticky bottom-0">
         <div className="min-w-full absolute inset-0 p-4 -left-10 -right-10 blurCard"></div>
         <div className="relative p-4">
           <CommentField

@@ -51,8 +51,16 @@ const Dashboard = () => {
   return (
     <>
       <div className=" relative flex w-full ">
-        <SideBar />
-        <section className={`px-6 w-full mb-20 z-[1] ${collapseStore ? 'lg:pl-[20%] lg:ml-3 lg:ease-in-out lg:duration-1000' : 'lg:pl-6 lg:ease-in-out lg:duration-1000'}`}>
+        <div className="mt-[95px] p-0">
+          <SideBar />
+        </div>
+        <section
+          className={`px-6 w-full mb-20 z-[1] ${
+            collapseStore
+              ? "lg:pl-[20%] lg:ml-3 lg:ease-in-out lg:duration-1000"
+              : "lg:pl-6 lg:ease-in-out lg:duration-1000"
+          }`}
+        >
           <ProjectContainer />
         </section>
       </div>

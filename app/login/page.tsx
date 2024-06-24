@@ -37,6 +37,7 @@ export default function Login({
           Email
         </label>
         <input
+        id="email"
           className="rounded-md px-4 py-2 bg-inherit border mb-6"
           type="email"
           name="email"
@@ -47,6 +48,7 @@ export default function Login({
           Password
         </label>
         <input
+        id="password"
           className="rounded-md px-4 py-2 bg-inherit border mb-1"
           type="password"
           name="password"

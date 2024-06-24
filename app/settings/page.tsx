@@ -148,10 +148,10 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className={`w-full relative flex px-6 `}>
-      <div className="mt-10 p-0">
-     <SideBar/>
-      </div>
+    <div className={`w-full relative flex ${collapseStore ? 'px-0' : 'px-6'} `}>
+      <div className="mt-[95px] p-0">
+          <SideBar />
+        </div>
       <Card className={` mt-32 ${collapseStore ? 'lg:w-[75%] lg:ml-[23%]  lg:ease-in-out lg:duration-1000' : 'w-full lg:pl-6 lg:ease-in-out lg:duration-1000'} xl:col-span-2`}>
         <CardHeader>
           <CardTitle>Update Profile</CardTitle>

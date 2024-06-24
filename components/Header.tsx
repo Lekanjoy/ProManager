@@ -33,7 +33,7 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full fixed z-50 bg-white left-0 top-0 flex px-6 py-[22px] shadow-md items-center justify-between gap-x-10">
+    <header className="w-full fixed z-[5] bg-white left-0 top-0 flex px-6 py-[22px] shadow-md items-center justify-between gap-x-10">
       <div className="flex justify-between gap-x-11 items-center">
         <Link href={"/"} className="flex gap-x-2 items-center">
           <Image src={logo} alt="Logo" />

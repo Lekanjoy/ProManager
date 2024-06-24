@@ -102,7 +102,7 @@ const TaskCardDetails = () => {
 
   return (
     <>
-      <section className="z-[50] bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center">
+      <section data-testid="overlay" className="z-[10] bg-[rgba(0,0,0,0.5)] w-full h-screen fixed left-0 top-0 px-4 flex justify-center items-center">
       <CardDetails
         currentTask={currentTask}
         setIsDeleteModalOpen={setIsDeleteModalOpen}

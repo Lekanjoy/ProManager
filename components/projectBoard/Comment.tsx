@@ -145,7 +145,7 @@ const Comment = ({ comment }: commentProps) => {
   const isAuthor = user?.id === authorId;
 
   return (
-    <div className={` w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words  ${isAuthor ? 'border-l-4 border-l-[#00796b]' : ''}`}>
+    <div data-testid="comment" className={` w-full bg-[#F5F5F5] p-2 flex-col rounded-tl-none rounded-md flex  gap-x-2 break-words  ${isAuthor ? 'border-l-4 border-l-[#00796b]' : ''}`}>
       <div className="w-full flex gap-x-1 justify-between items-center">
         <div className="flex gap-x-1 items-center">
           <Image src={member} alt="Team members avatar" />
