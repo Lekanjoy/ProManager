@@ -73,7 +73,8 @@ We welcome contributions to ProManager! To contribute, follow these steps:
 - Open a pull request with a detailed description of your changes.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+
+This project is licensed under the [MIT License](LICENSE).
 
 ## Authors
 Olalekan Alabi
