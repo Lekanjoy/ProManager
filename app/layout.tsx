@@ -1,6 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import ShowHeader from "@/components/ShowHeader";
 
@@ -24,8 +25,9 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
           <ReduxProvider>
-              <ShowHeader />
+            <ShowHeader />
             {children}
+            <Analytics />
           </ReduxProvider>
         </main>
         <Toaster />
