@@ -53,9 +53,9 @@ const SideBar = () => {
 
   return (
     <aside
-      className={`z-[4] bg-white hidden flex-col pl-[22px]  pt-[43px]  fixed min-h-[85vh]  border-r border-[#DBDBDB] 
-          ${collapseStore ? "sidebar" : "sidebar-hidden"}
-          lg:flex`}
+      className={`z-[4] bg-white  flex-col pl-[22px]  pt-[43px]  fixed min-h-[85vh]  border-r border-[#DBDBDB] 
+          ${collapseStore ? " sidebar" : "sidebar-hidden"}
+          `}
     >
       <nav className="flex flex-col gap-y-7">
         {navData.map((navItem) => {

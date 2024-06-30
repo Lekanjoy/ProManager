@@ -68,7 +68,7 @@ export default function MemberList() {
     <section
       className={`relative w-full flex  ${collapseStore ? "px-0" : "px-6"}`}
     >
-      <div className="mt-[95px] p-0">
+      <div className="mt-[90px] p-0 lg:mt-[95px]">
         <SideBar />
       </div>
       <Card

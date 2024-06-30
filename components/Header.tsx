@@ -45,9 +45,9 @@ const Header = () => {
           src={collapse}
           alt="collapse icon"
           onClick={() => dispatch(collapseAside())}
-          className={`cursor-pointer hidden 
+          className={`cursor-pointer  
           ${collapseState ? "" : "rotate-180"}
-          lg:flex`}
+          `}
         />
       </div>
 

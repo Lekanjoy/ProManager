@@ -44,7 +44,7 @@ const ProjectContainer = () => {
   const { user } = useAuth();
   const tasksData: teamData[] = useTypedSelector((store) => store.tasks.tasks);
 
-  const [columns, setColumns] = useState(defaultCols);
+  const [columns] = useState(defaultCols);
   const [tasks, setTasks] = useState<taskDataObj[] | null>(null);
   const [activeTask, setActiveTask] = useState(null);
   const [filterValue, setFilterValue] = useState("");
@@ -161,7 +161,7 @@ const ProjectContainer = () => {
         date={date}
         setDate={setDate}
       />
-      <section className="w-full grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-2 lg:grid-cols-3 lg:gap-x-4">
+      <section className="w-full flex gap-x-4 overflow-x-auto scrollbar-thin-blue md:grid md:grid-cols-2 md:gap-x-2 lg:grid-cols-3 lg:gap-x-4">
         <DndContext
           sensors={sensors}
           onDragStart={(event: DragStartEvent) =>

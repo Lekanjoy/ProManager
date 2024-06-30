@@ -51,7 +51,7 @@ const Dashboard = () => {
   return (
     <>
       <div className=" relative flex w-full ">
-        <div className="mt-[95px] p-0">
+        <div className="mt-[90px] p-0 lg:mt-[95px] ">
           <SideBar />
         </div>
         <section
