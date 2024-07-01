@@ -48,7 +48,7 @@ export default function Signup({
       .select();
     if (signUpData && newTeamData) {
       return redirect(
-        "/login?message=Check your email to continue sign in process"
+        "/signup?message=Check your email to continue sign in process"
       );
     }
   };
