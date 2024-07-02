@@ -32,9 +32,12 @@ const ProjectHeaders = ({
       {loading ? (
         <Image unoptimized src={spinner} alt="Spinner" />
       ) : (
-        <h1 className="text-secColor text-5xl font-semibold">
-          {tasksData[0]?.team_name}
-        </h1>
+        <div className="text-secColor flex flex-col gap-y-1">
+          <h1 className=" text-5xl font-semibold">
+            {tasksData[0]?.team_name}
+          </h1>
+          <p className="font-light text-sm max-w-prose"> {tasksData[0]?.description}</p>
+        </div>
       )}
       <div className="flex gap-x-3 items-center text-primColor">
         <SelectFilter

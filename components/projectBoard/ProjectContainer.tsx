@@ -9,6 +9,7 @@ import {
   DragOverlay,
   DragStartEvent,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
 import {
   customCollisionDetectionAlgorithm,
+  onDragEnd,
   onDragOver,
   onDragStart,
 } from "@/utils/dnd-kit/funct";
@@ -23,7 +25,6 @@ import { createPortal } from "react-dom";
 import { createClient } from "@/utils/supabase/client";
 import TaskCard from "./TaskCard";
 import ProjectHeaders from "../ProjectHeaders";
-
 
 const defaultCols: ColumnDataType[] = [
   {
@@ -57,6 +58,12 @@ const ProjectContainer = () => {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 10,
       },
     })
   );
@@ -125,7 +132,7 @@ const ProjectContainer = () => {
   const [isTaskDropped, setIsTaskDropped] = useState(false);
   useEffect(() => {
     if (isTaskDropped) {
-      // Select matching team  and update current task status in database by Admin/Member after 10s
+      // Select matching team  and update current task status in database by Admin/Member after 5s
       setTimeout(async () => {
         const supabase = createClient();
         try {
@@ -161,18 +168,14 @@ const ProjectContainer = () => {
         date={date}
         setDate={setDate}
       />
-      <section className="w-full flex gap-x-4 overflow-x-auto scrollbar-thin-blue md:grid md:grid-cols-2 md:gap-x-2 lg:grid-cols-3 lg:gap-x-4">
+      <section className="w-full flex gap-x-4 overflow-x-auto scrollbar-thin-blue lg:grid  lg:grid-cols-3 lg:gap-x-4">
         <DndContext
           sensors={sensors}
           onDragStart={(event: DragStartEvent) =>
             onDragStart(event, setActiveTask)
           }
-          onDragOver={(event: DragOverEvent) =>
-            onDragOver(event, setTasks)
-          }
-          onDragEnd={(event: DragEndEvent) => {
-            setIsTaskDropped(true);
-          }}
+          onDragOver={(event: DragOverEvent) => onDragOver(event, setTasks)}
+          onDragEnd={(event: DragEndEvent) => onDragEnd(setIsTaskDropped)}
           collisionDetection={customCollisionDetectionAlgorithm}
         >
           {columns.map((col) => {

@@ -10,10 +10,15 @@ import {
 } from "@dnd-kit/core";
 import { taskDataObj } from "@/types";
 
+const preventDefault = (e: TouchEvent) => {
+  e.preventDefault();
+};
+
 export function onDragStart(
   event: DragStartEvent,
   setActiveTask: Dispatch<SetStateAction<null>>
 ) {
+  document.addEventListener('touchmove', preventDefault, { passive: false });
   if (event.active.data.current?.type === "Task") {
     setActiveTask(event.active.data.current.task);
   }
@@ -77,6 +82,10 @@ export function onDragOver(
   }
 }
 
+export function onDragEnd(setIsTaskDropped:Dispatch<SetStateAction<boolean>>){
+  document.removeEventListener('touchmove', preventDefault);
+  setIsTaskDropped(true);
+}
 
 export const customCollisionDetectionAlgorithm: CollisionDetection = (args) => {
   const closestCornersCollisions = closestCorners(args);

@@ -67,7 +67,7 @@ const TaskColumn = ({ tasks, column }: columnDataI) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="  min-w-[320px] bg-[#F5F5F5] rounded-t-2xl border px-5 pt-5 pb-10 lg:min-w-fit lg:min-h-[700px]"
+      className="  min-w-[320px] min-h-[420px] bg-[#F5F5F5] rounded-t-2xl border px-5 pt-5 pb-10 lg:min-w-fit lg:min-h-[700px]"
     >
       <div
         className={`flex justify-between pb-6 border-b-[3px]  mb-7 ${
