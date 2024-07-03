@@ -22,12 +22,12 @@ const navData: navDataProps[] = [
     icon: home,
     route: "/",
   },
-  {
-    id: 1,
-    name: "Messages",
-    icon: messages,
-    route: "/messages",
-  },
+  // {
+  //   id: 1,
+  //   name: "Messages",
+  //   icon: messages,
+  //   route: "/messages",
+  // },
   {
     id: 2,
     name: "Tasks",
