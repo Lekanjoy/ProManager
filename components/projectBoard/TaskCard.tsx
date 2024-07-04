@@ -58,7 +58,6 @@ const TaskCard = ({ task }: ITaskCardProps) => {
 
   return (
     <div
-    data-testid="taskCard"
       ref={setNodeRef}
       style={style}
       className="w-full bg-white p-4 rounded-2xl text-primColor"
@@ -77,7 +76,7 @@ const TaskCard = ({ task }: ITaskCardProps) => {
         </p>
         <GripIcon size={16}/>
       </div>
-      <div onClick={viewTaskDetails} className="cursor-pointer">
+      <div data-testid="taskCard" onClick={viewTaskDetails} className="cursor-pointer">
         <div className=" mb-8">
           <p className="text-secColor font-semibold mb-[6px]">{title}</p>
           <p className="text-xs">{description}</p>
