@@ -11,6 +11,5 @@ export const config = {
     "/",
     "/login",
     "/signup",
-    "/member_signup",
   ],
 };
