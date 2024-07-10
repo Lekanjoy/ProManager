@@ -4,6 +4,12 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "../login/submit-button";
 import { taskDataObj } from "@/types";
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'SignUp',
+};
+
 
 export default function Signup({
   searchParams,

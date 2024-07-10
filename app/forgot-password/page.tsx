@@ -1,6 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "../login/submit-button";
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Recover Password',
+};
+
 
 export default function ForgotPassword({
   searchParams,

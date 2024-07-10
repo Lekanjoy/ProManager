@@ -1,6 +1,11 @@
 import { SubmitButton } from "../login/submit-button";
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Set Password',
+};
 
 export default async function SetPassword({
   searchParams,

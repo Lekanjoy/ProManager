@@ -2,6 +2,11 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Login',
+};
 
 export default function Login({
   searchParams,

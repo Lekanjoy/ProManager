@@ -1,6 +1,11 @@
 import MembersList from "@/components/pages/MembersList";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: 'Members',
+};
 
 
 export default async function Members() {
